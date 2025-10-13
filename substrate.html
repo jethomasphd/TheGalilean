@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUBSTRATE - A Meditation on Reality</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --bg: #0a0b0f;
+      --panel: #0f1114;
+      --panel-light: #151821;
+      --ink: #c8e6dc;
+      --acc: #00ffaa;
+      --acc-glow: #00ff8855;
+      --muted: #6b8a7f;
+      --gold: #ffd700;
+      --warn: #ff9f40;
+      --danger: #ff4757;
+      --safe: #26de81;
+      --shadow: 0 10px 40px rgba(0,0,0,0.7);
+      --glow: 0 0 20px;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--bg) 0%, #0d0f13 100%);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Matrix rain background */
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    #wrap {
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      gap: 24px;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* Header */
+    header {
+      text-align: center;
+      padding: 20px 0;
+      position: relative;
+    }
+    
+    #title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      font-size: clamp(32px, 6vw, 56px);
+      background: linear-gradient(135deg, var(--acc) 0%, var(--ink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: var(--glow) var(--acc-glow);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    
+    .subtitle {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    
+    /* HUD Stats */
+    #hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid rgba(0, 255, 170, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--acc), transparent);
+      animation: scan 3s linear infinite;
+    }
+    
+    @keyframes scan {
+      to { left: 100%; }
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 255, 170, 0.3);
+      box-shadow: 0 15px 50px rgba(0, 255, 170, 0.1);
+    }
+    
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    
+    .stat-bar {
+      height: 4px;
+      background: rgba(0, 255, 170, 0.1);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: all 0.6s ease;
+      position: relative;
+    }
+    
+    .stat-bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    
+    .coherence-fill { background: linear-gradient(90deg, var(--safe), var(--acc)); }
+    .integrity-fill { background: linear-gradient(90deg, var(--warn), var(--gold)); }
+    .probability-fill { background: linear-gradient(90deg, var(--danger), var(--warn)); }
+    
+    /* Main Content */
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 400px;
+    }
+    
+    #textDisplay {
+      background: linear-gradient(135deg, var(--panel) 0%, var(--panel-light) 100%);
+      border: 1px solid rgba(0, 255, 170, 0.1);
+      border-radius: 16px;
+      padding: 28px;
+      line-height: 1.8;
+      box-shadow: var(--shadow);
+      min-height: 250px;
+      font-size: 15px;
+      position: relative;
+    }
+    
+    #textDisplay::before {
+      content: '>';
+      position: absolute;
+      left: 12px;
+      top: 28px;
+      color: var(--acc);
+      opacity: 0.5;
+      animation: blink 1s step-end infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0; }
+    }
+    
+    /* Choices */
+    #choices {
+      display: grid;
+      gap: 12px;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .choice {
+      background: linear-gradient(135deg, rgba(0, 255, 170, 0.02) 0%, transparent 100%);
+      border: 1px solid rgba(0, 255, 170, 0.2);
+      border-radius: 12px;
+      color: var(--ink);
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .choice::before {
+      content: '▶';
+      margin-right: 10px;
+      color: var(--acc);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .choice:hover::before {
+      opacity: 1;
+    }
+    
+    .choice:hover {
+      background: linear-gradient(135deg, rgba(0, 255, 170, 0.08) 0%, rgba(0, 255, 170, 0.02) 100%);
+      border-color: var(--acc);
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(0, 255, 170, 0.15);
+    }
+    
+    .choice:active {
+      transform: translateX(3px) scale(0.98);
+    }
+    
+    /* Input Section */
+    #inputSection {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    #userInput {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid rgba(0, 255, 170, 0.2);
+      border-radius: 12px;
+      color: var(--ink);
+      padding: 16px 20px;
+      font-family: inherit;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    #userInput:focus {
+      outline: none;
+      border-color: var(--acc);
+      box-shadow: 0 0 20px rgba(0, 255, 170, 0.1);
+    }
+    
+    /* Toolbar */
+    #toolbar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      background: rgba(0, 255, 170, 0.05);
+      border: 1px solid rgba(0, 255, 170, 0.2);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 10px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background: rgba(0, 255, 170, 0.1);
+      border-color: var(--acc);
+      transform: translateY(-1px);
+    }
+    
+    /* Special Text Styles */
+    .evidence {
+      display: inline-block;
+      border-left: 3px solid var(--warn);
+      padding-left: 12px;
+      margin: 16px 0;
+      font-style: italic;
+      color: var(--warn);
+      animation: highlight 2s ease infinite;
+    }
+    
+    @keyframes highlight {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+    
+    .revelation {
+      color: var(--danger);
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+    }
+    
+    .philosophical {
+      color: var(--acc);
+      font-style: italic;
+      letter-spacing: 0.05em;
+    }
+    
+    .glitch {
+      position: relative;
+      display: inline-block;
+      animation: glitch 2s linear infinite;
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 var(--danger), -2px 0 var(--acc); }
+      25% { text-shadow: -2px 0 var(--danger), 2px 0 var(--acc); }
+      50% { text-shadow: 2px 0 var(--acc), -2px 0 var(--danger); }
+      75% { text-shadow: -2px 0 var(--acc), 2px 0 var(--danger); }
+    }
+    
+    /* Loading Screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 1s ease;
+    }
+    
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(0, 255, 170, 0.1);
+      border-top-color: var(--acc);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      #wrap { padding: 15px; }
+      #title { font-size: 28px; }
+      .stat-value { font-size: 20px; }
+      #textDisplay { padding: 20px; }
+    }
+    
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+      .stat-bar-fill::after { display: none; }
+    }
+    
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+    }
+    
+    .modal-content {
+      background: var(--panel);
+      border: 1px solid var(--acc);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalIn 0.3s ease;
+    }
+    
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal h2 {
+      color: var(--acc);
+      margin-bottom: 20px;
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .modal p {
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+    
+    .close-modal {
+      float: right;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.3s ease;
+    }
+    
+    .close-modal:hover {
+      color: var(--acc);
+    }
+  </style>
+</head>
+<body>
+  <!-- Matrix Rain Canvas -->
+  <canvas id="matrix"></canvas>
+  
+  <!-- Loading Screen -->
+  <div id="loading">
+    <div class="loader"></div>
+    <p style="margin-top: 20px; color: var(--acc);">INITIALIZING SUBSTRATE...</p>
+  </div>
+  
+  <!-- Main Container -->
+  <div id="wrap">
+    <header>
+      <h1 id="title">SUBSTRATE</h1>
+      <div class="subtitle">A Journey Through Simulated Reality</div>
+    </header>
+    
+    <!-- HUD Statistics -->
+    <section id="hud">
+      <div class="stat-card">
+        <div class="stat-label">Cognitive Coherence</div>
+        <div class="stat-value"><span id="coherence">100</span>%</div>
+        <div class="stat-bar">
+          <div class="stat-bar-fill coherence-fill" id="coherenceBar" style="width: 100%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Reality Integrity</div>
+        <div class="stat-value"><span id="integrity">100</span>%</div>
+        <div class="stat-bar">
+          <div class="stat-bar-fill integrity-fill" id="integrityBar" style="width: 100%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Simulation Probability</div>
+        <div class="stat-value"><span id="probability">0.1</span>%</div>
+        <div class="stat-bar">
+          <div class="stat-bar-fill probability-fill" id="probabilityBar" style="width: 0.1%"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main>
+      <div id="textDisplay"></div>
+      <div id="choices"></div>
+      <div id="inputSection">
+        <input type="text" id="userInput" placeholder="Enter command..." autocomplete="off">
+      </div>
+    </main>
+    
+    <!-- Toolbar -->
+    <div id="toolbar">
+      <button class="btn" id="saveBtn">💾 Save</button>
+      <button class="btn" id="loadBtn">📂 Load</button>
+      <button class="btn" id="helpBtn">❓ Help</button>
+      <button class="btn" id="resetBtn">🔄 Reset</button>
+    </div>
+    
+    <footer>
+      An Interactive Philosophical Experience • v2.0 • Made with OpenAI GPT-5 and Claude Opus 4.1 • JEThomasPhD@gmail.com
+    </footer>
+  </div>
+  
+  <!-- Help Modal -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeHelp">&times;</span>
+      <h2>About SUBSTRATE</h2>
+      <p><strong>The Simulation Hypothesis</strong> suggests that what we perceive as reality might be an artificial simulation, like a computer program.</p>
+      
+      <p><strong>Your Statistics:</strong></p>
+      <p>• <strong>Cognitive Coherence:</strong> Your mental stability. Too much doubt can shatter your worldview.</p>
+      <p>• <strong>Reality Integrity:</strong> How stable the world appears. Push too hard, and things might glitch.</p>
+      <p>• <strong>Simulation Probability:</strong> Your current belief that reality is simulated.</p>
+      
+      <p><strong>Tips:</strong></p>
+      <p>• Explore different paths to uncover the truth</p>
+      <p>• Some choices permanently alter your journey</p>
+      <p>• There are multiple endings based on your beliefs and actions</p>
+      <p>• Hidden secrets await the curious</p>
+      
+      <p><em>"What is real? How do you define real?"</em></p>
+    </div>
+  </div>
+  
+  <script>
+    /* ===== Matrix Rain Effect ===== */
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const chars = '01';
+      const fontSize = 14;
+      const columns = canvas.width / fontSize;
+      const drops = [];
+      
+      for(let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * -100;
+      }
+      
+      function draw() {
+        ctx.fillStyle = 'rgba(10, 11, 15, 0.03)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#00ffaa20';
+        ctx.font = fontSize + 'px monospace';
+        
+        for(let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          
+          if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+      
+      setInterval(draw, 35);
+    }
+    
+    window.addEventListener('resize', initMatrix);
+    initMatrix();
+    
+    /* ===== Game State Management ===== */
+    const gameState = {
+      scene: 'init',
+      coherence: 100,
+      integrity: 100,
+      probability: 0.1,
+      depth: 0,
+      flags: {},
+      evidence: [],
+      discoveries: [],
+      typing: false,
+      chapter: 0
+    };
+    
+    /* ===== Audio Cues (Text-based since we can't play actual audio) ===== */
+    const audioEvents = {
+      discovery: '♪ [Discovery chime]',
+      warning: '⚠ [Warning tone]',
+      glitch: '◉ [Static interference]',
+      success: '✓ [Success tone]'
+    };
+    
+    /* ===== Utility Functions ===== */
+    function clamp(val, min = 0, max = 100) {
+      return Math.max(min, Math.min(max, val));
+    }
+    
+    function updateHUD() {
+      const c = clamp(gameState.coherence);
+      const i = clamp(gameState.integrity);
+      const p = clamp(gameState.probability);
+      
+      document.getElementById('coherence').textContent = c;
+      document.getElementById('integrity').textContent = i;
+      document.getElementById('probability').textContent = p.toFixed(1);
+      
+      document.getElementById('coherenceBar').style.width = c + '%';
+      document.getElementById('integrityBar').style.width = i + '%';
+      document.getElementById('probabilityBar').style.width = p + '%';
+      
+      // Change bar colors based on values
+      const coherenceBar = document.getElementById('coherenceBar');
+      const integrityBar = document.getElementById('integrityBar');
+      
+      if(c < 30) coherenceBar.style.background = 'linear-gradient(90deg, var(--danger), var(--warn))';
+      else if(c < 60) coherenceBar.style.background = 'linear-gradient(90deg, var(--warn), var(--gold))';
+      
+      if(i < 30) integrityBar.style.background = 'linear-gradient(90deg, var(--danger), var(--warn))';
+      else if(i < 60) integrityBar.style.background = 'linear-gradient(90deg, var(--warn), var(--gold))';
+      
+      // Check for critical states
+      if(gameState.coherence <= 0) {
+        setTimeout(() => displayScene('coherence_collapse'), 500);
+      }
+      if(gameState.integrity <= 0) {
+        setTimeout(() => displayScene('reality_collapse'), 500);
+      }
+    }
+    
+    /* ===== Text Display with Typewriter Effect ===== */
+    let typeTimer;
+    let currentText = '';
+    let textIndex = 0;
+    let skipTyping = false;
+    
+    function typeWriter(text, callback) {
+      clearTimeout(typeTimer);
+      const display = document.getElementById('textDisplay');
+      currentText = text;
+      textIndex = 0;
+      gameState.typing = true;
+      skipTyping = false;
+      
+      // Allow click to skip
+      display.onclick = () => { skipTyping = true; };
+      
+      function type() {
+        if(skipTyping) {
+          display.innerHTML = currentText;
+          display.onclick = null;
+          gameState.typing = false;
+          if(callback) callback();
+          return;
+        }
+        
+        if(textIndex < currentText.length) {
+          display.innerHTML = currentText.substring(0, ++textIndex);
+          typeTimer = setTimeout(type, 15);
+        } else {
+          display.onclick = null;
+          gameState.typing = false;
+          if(callback) callback();
+        }
+      }
+      type();
+    }
+    
+    /* ===== Choice Display ===== */
+    function showChoices(choices) {
+      const container = document.getElementById('choices');
+      container.innerHTML = '';
+      
+      choices.forEach((choice, index) => {
+        setTimeout(() => {
+          const btn = document.createElement('button');
+          btn.className = 'choice';
+          btn.innerHTML = choice.text;
+          
+          // Check if choice is locked
+          if(choice.requires && !gameState.flags[choice.requires]) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.innerHTML += ' [LOCKED]';
+          } else {
+            btn.onclick = () => {
+              if(!gameState.typing) {
+                displayScene(choice.next);
+              }
+            };
+          }
+          
+          container.appendChild(btn);
+        }, index * 100);
+      });
+    }
+    
+    /* ===== Input Handling ===== */
+    function showInput(handler) {
+      const section = document.getElementById('inputSection');
+      const input = document.getElementById('userInput');
+      
+      section.style.display = 'block';
+      input.value = '';
+      input.focus();
+      
+      input.onkeypress = (e) => {
+        if(e.key === 'Enter') {
+          const value = input.value.trim();
+          section.style.display = 'none';
+          handler(value);
+        }
+      };
+    }
+    
+    /* ===== Effects Application ===== */
+    function applyEffects(effects = {}) {
+      if(effects.coherence !== undefined) {
+        gameState.coherence += effects.coherence;
+      }
+      if(effects.integrity !== undefined) {
+        gameState.integrity += effects.integrity;
+      }
+      if(effects.probability !== undefined) {
+        gameState.probability = clamp(gameState.probability + effects.probability, 0, 100);
+      }
+      if(effects.depth !== undefined) {
+        gameState.depth = effects.depth;
+      }
+      if(effects.flags) {
+        Object.assign(gameState.flags, effects.flags);
+      }
+      if(effects.evidence) {
+        gameState.evidence.push(...effects.evidence);
+      }
+      if(effects.discovery) {
+        gameState.discoveries.push(effects.discovery);
+        // Show discovery notification
+        const text = document.getElementById('textDisplay').innerHTML;
+        document.getElementById('textDisplay').innerHTML = text + `<br><br><em>${audioEvents.discovery} ${effects.discovery}</em>`;
+      }
+    }
+    
+    /* ===== Scene Display ===== */
+    function displayScene(sceneName) {
+      const scene = scenes[sceneName];
+      if(!scene) {
+        console.error('Scene not found:', sceneName);
+        displayScene('error_scene');
+        return;
+      }
+      
+      gameState.scene = sceneName;
+      
+      // Apply effects before showing text
+      if(scene.effects) {
+        applyEffects(scene.effects);
+      }
+      
+      updateHUD();
+      
+      // Clear choices and input
+      document.getElementById('choices').innerHTML = '';
+      document.getElementById('inputSection').style.display = 'none';
+      
+      // Display text with typewriter effect
+      typeWriter(scene.text, () => {
+        if(scene.choices) {
+          showChoices(scene.choices);
+        } else if(scene.input) {
+          showInput(scene.input);
+        } else if(scene.autoNext) {
+          setTimeout(() => displayScene(scene.autoNext), scene.delay || 3000);
+        }
+      });
+      
+      // Auto-save
+      saveGame();
+    }
+    
+    /* ===== Save/Load System ===== */
+    function saveGame() {
+      localStorage.setItem('substrate_save', JSON.stringify(gameState));
+    }
+    
+    function loadGame() {
+      const saved = localStorage.getItem('substrate_save');
+      if(saved) {
+        const data = JSON.parse(saved);
+        Object.assign(gameState, data);
+        updateHUD();
+        displayScene(gameState.scene);
+        return true;
+      }
+      return false;
+    }
+    
+    function resetGame() {
+      if(confirm('Reset all progress? This cannot be undone.')) {
+        localStorage.removeItem('substrate_save');
+        location.reload();
+      }
+    }
+    
+    /* ===== Scenes Database ===== */
+    const scenes = {
+      // ===== INTRODUCTION & TUTORIAL =====
+      init: {
+        text: `<strong>Welcome to SUBSTRATE</strong>
+        
+        Before we begin, a question to calibrate your mind:
+        
+        <em class="philosophical">If you discovered with absolute certainty that your entire life—every memory, every sensation, every person you've ever loved—was a simulation... would you want to know?</em>`,
+        choices: [
+          { text: "Yes. Truth matters more than comfort.", next: "intro_truth" },
+          { text: "No. Some illusions are worth preserving.", next: "intro_illusion" },
+          { text: "I'm not sure. It depends on what I could do with that knowledge.", next: "intro_uncertain" }
+        ]
+      },
+      
+      intro_truth: {
+        effects: { probability: +5, flags: { seeksTruth: true } },
+        text: `<em class="philosophical">"The truth will set you free, but first it will piss you off."</em>
+        
+        Your preference for truth has been noted. Even uncomfortable realities deserve examination.
+        
+        Let me introduce you to the Simulation Hypothesis...`,
+        autoNext: "tutorial",
+        delay: 4000
+      },
+      
+      intro_illusion: {
+        effects: { coherence: +5, flags: { valuesStability: true } },
+        text: `<em class="philosophical">"We accept the reality with which we're presented."</em>
+        
+        Your preference for stability has been noted. Sometimes, the most real thing is what we choose to believe.
+        
+        Still, curiosity brought you here. Let's explore carefully...`,
+        autoNext: "tutorial",
+        delay: 4000
+      },
+      
+      intro_uncertain: {
+        effects: { probability: +2, flags: { pragmatic: true } },
+        text: `<em class="philosophical">"The important thing is not to stop questioning."</em>
+        
+        Your balanced approach has been noted. Wisdom often lies in embracing uncertainty.
+        
+        Let's explore this question together...`,
+        autoNext: "tutorial",
+        delay: 4000
+      },
+      
+      tutorial: {
+        text: `<strong>THE SIMULATION HYPOTHESIS</strong>
+        
+        In 2003, philosopher Nick Bostrom proposed a trilemma. At least one of these must be true:
+        
+        1) <span class="philosophical">Civilizations rarely reach technological maturity</span>
+        2) <span class="philosophical">Advanced civilizations rarely run ancestor simulations</span>  
+        3) <span class="philosophical">We are almost certainly living in a simulation</span>
+        
+        The logic is statistical: if advanced civilizations can and do create many simulated worlds, then simulated beings would vastly outnumber "real" ones.
+        
+        Therefore, any randomly selected conscious being is more likely to be simulated than not.`,
+        choices: [
+          { text: "That's... unsettling. Tell me more.", next: "lab_intro" },
+          { text: "But how could we ever know for certain?", next: "evidence_intro" },
+          { text: "This sounds like science fiction.", next: "skeptic_path" }
+        ]
+      },
+      
+      evidence_intro: {
+        effects: { probability: +3 },
+        text: `Good question. While we can't prove it definitively, we can look for clues:
+        
+        • <strong>Computational limits:</strong> Like how video games have maximum draw distances
+        • <strong>Quantum mechanics:</strong> Reality seems to "render" only when observed
+        • <strong>Mathematical constants:</strong> The universe follows suspiciously elegant rules
+        • <strong>Glitches:</strong> Unexplained phenomena that shouldn't exist
+        
+        You're about to participate in an experiment that explores these very questions...`,
+        autoNext: "lab_intro",
+        delay: 5000
+      },
+      
+      skeptic_path: {
+        effects: { coherence: +5, probability: -2 },
+        text: `A healthy skepticism. Many scientists dismiss the hypothesis as unfalsifiable—if we can't test it, is it even science?
+        
+        Yet consider: every sufficiently advanced technology seems like magic to those who don't understand it. 
+        
+        What if I told you we could test it? Not definitively, but enough to shift your beliefs...`,
+        choices: [
+          { text: "I'm listening. Show me your evidence.", next: "lab_intro" },
+          { text: "No amount of evidence would convince me.", next: "stubborn_skeptic" }
+        ]
+      },
+      
+      stubborn_skeptic: {
+        effects: { coherence: +10, flags: { closedMind: true } },
+        text: `Fair enough. Certainty is comfortable, even if it might be wrong.
+        
+        But since you're here, why not see what the experiment reveals? Think of it as fiction if that helps.`,
+        autoNext: "lab_intro",
+        delay: 4000
+      },
+      
+      // ===== MAIN LAB SEQUENCE =====
+      lab_intro: {
+        effects: { chapter: 1 },
+        text: `<strong>THE SUBSTRATE LABORATORY</strong>
+        <em>Institute for Advanced Consciousness Studies</em>
+        <em>Wednesday, 3:14 AM</em>
+        
+        You are Dr. Sarah Chen, a cognitive scientist specializing in consciousness studies. You've volunteered for an experimental protocol that uses advanced neural interfaces to test the boundaries of perceived reality.
+        
+        The lab is empty at this hour. Just you, the machines, and a question that won't let you sleep:
+        
+        <span class="evidence">How can consciousness know its own substrate?</span>`,
+        choices: [
+          { text: "Begin the consciousness mapping protocol", next: "protocol_start" },
+          { text: "Examine the laboratory first", next: "examine_lab" },
+          { text: "Check the previous test logs", next: "check_logs" }
+        ]
+      },
+      
+      examine_lab: {
+        effects: { probability: +3, integrity: -5 },
+        text: `You walk the perimeter of Lab B-13. Everything seems normal at first glance, but then you notice:
+        
+        • The shadows don't quite match the light sources
+        • Your reflection in the glass arrives a fraction of a second late
+        • The hum of the machines follows a pattern—like a loop of recorded sound
+        
+        <span class="glitch">When you look closer at the corner where two walls meet, the textures seem to... repeat?</span>`,
+        effects: { discovery: "Environmental Anomaly Detected" },
+        choices: [
+          { text: "Document these anomalies", next: "document_glitches" },
+          { text: "It's just fatigue. Begin the experiment.", next: "protocol_start" },
+          { text: "Touch the repeating texture", next: "touch_glitch" }
+        ]
+      },
+      
+      touch_glitch: {
+        effects: { integrity: -15, probability: +10, flags: { touchedGlitch: true } },
+        text: `Your hand passes through the wall.
+        
+        <span class="revelation">Not through—INTO it.</span>
+        
+        For a moment, you see the structure beneath: lines of code scrolling infinitely, functions calling functions, your own hand defined as an object with properties and methods.
+        
+        You pull back, gasping. Your hand is solid again, but you can still feel the echo of being data.
+        
+        ${audioEvents.glitch}`,
+        choices: [
+          { text: "This can't be real", next: "denial_response" },
+          { text: "I need to go deeper", next: "deeper_dive" },
+          { text: "Start the official protocol before I lose my mind", next: "protocol_start" }
+        ]
+      },
+      
+      check_logs: {
+        effects: { probability: +5, flags: { readLogs: true } },
+        text: `<strong>Previous Test Logs - CLASSIFIED</strong>
+        
+        Subject 001: "The walls aren't walls. They're boundaries."
+        Subject 002: [REDACTED]
+        Subject 003: "I can see the function calls. We're all just methods in a class."
+        Subject 004: "Don't trust the EXIT command. It doesn't exit anything."
+        Subject 005: [FILE CORRUPTED]
+        Subject 006: "Sarah, if you're reading this, you've been here before. Check your left arm."
+        
+        You roll up your sleeve. A small scar you don't remember getting. It reads: <span class="evidence">ITERATION 7</span>`,
+        effects: { discovery: "You are Subject #007" },
+        choices: [
+          { text: "This is insane. I would remember.", next: "memory_doubt" },
+          { text: "Begin the protocol. Find answers.", next: "protocol_start" },
+          { text: "Search for more evidence", next: "deep_search" }
+        ]
+      },
+      
+      memory_doubt: {
+        effects: { coherence: -10, probability: +8 },
+        text: `Would you, though? 
+        
+        If memory is just data, it can be edited. Deleted. Reinitialized.
+        
+        You try to remember yesterday. It's there—breakfast, emails, a meeting about this very experiment. But the memories feel... thin. Like reading a summary rather than living an experience.
+        
+        <em class="philosophical">What's the difference between remembering something and being programmed to believe you remember it?</em>`,
+        choices: [
+          { text: "There must be a difference. There has to be.", next: "cling_to_reality" },
+          { text: "If there's no difference, does it matter?", next: "acceptance_path" },
+          { text: "Start the protocol. Get concrete data.", next: "protocol_start" }
+        ]
+      },
+      
+      // ===== PROTOCOL SEQUENCE =====
+      protocol_start: {
+        effects: { chapter: 2 },
+        text: `You sit in the neural interface chair. Electrodes automatically position themselves against your temples. The system initializes:
+        
+        <strong>CONSCIOUSNESS MAPPING PROTOCOL v3.7</strong>
+        Measuring: Cognitive Coherence | Reality Integrity | Belief Probability
+        
+        <em>Warning: This protocol may cause temporary dissociation, existential uncertainty, or recursive self-awareness. Continue?</em>`,
+        choices: [
+          { text: "Initialize the protocol", next: "protocol_phase1" },
+          { text: "Review safety parameters first", next: "safety_check" },
+          { text: "This feels wrong. Abort.", next: "abort_attempt" }
+        ]
+      },
+      
+      abort_attempt: {
+        effects: { coherence: -5 },
+        text: `You press the abort key. Nothing happens.
+        
+        Press it again. Still nothing.
+        
+        The screen flickers: <span class="glitch">ABORT FUNCTION COMMENTED OUT // TODO: FIX BEFORE PRODUCTION</span>
+        
+        ${audioEvents.warning}`,
+        choices: [
+          { text: "Try manual shutdown", next: "manual_shutdown" },
+          { text: "Continue with the protocol", next: "protocol_phase1" },
+          { text: "Call for help", next: "call_help" }
+        ]
+      },
+      
+      call_help: {
+        effects: { integrity: -10 },
+        text: `You call out. Your voice echoes strangely, as if the room's acoustics are calculated incorrectly.
+        
+        "Hello? Anyone there?"
+        
+        Your own voice responds from the intercom: <span class="revelation">"There's no one else, Sarah. There never was. You're the only conscious process in this instance."</span>`,
+        choices: [
+          { text: "That's impossible", next: "denial_spiral" },
+          { text: "Who are you?", next: "voice_identity" },
+          { text: "Continue the protocol", next: "protocol_phase1" }
+        ]
+      },
+      
+      protocol_phase1: {
+        text: `<strong>PHASE 1: BASELINE CONSCIOUSNESS</strong>
+        
+        The interface scans your neural patterns. On the screen, you watch your thoughts rendered as waveforms. Then something strange—the waveforms start predicting your thoughts before you think them.
+        
+        Not by milliseconds. By full seconds.
+        
+        The system knows what you'll think before you do.`,
+        effects: { probability: +7, coherence: -5 },
+        choices: [
+          { text: "Try to think something unpredictable", next: "unpredictable_test" },
+          { text: "This is just predictive modeling", next: "rationalize_1" },
+          { text: "Continue to Phase 2", next: "protocol_phase2" }
+        ]
+      },
+      
+      unpredictable_test: {
+        effects: { probability: +10, coherence: -8 },
+        text: `You try to think of something random. Purple elephant. The number 42. Your grandmother's maiden name.
+        
+        Each thought appears on screen before you've fully formed it.
+        
+        Then you see the next prediction: <span class="revelation">"Subject will realize they have no free will."</span>
+        
+        And you do. The thought arrives exactly as predicted.`,
+        choices: [
+          { text: "No. I choose my thoughts.", next: "free_will_test" },
+          { text: "Continue to Phase 2", next: "protocol_phase2" },
+          { text: "This is breaking me", next: "coherence_warning" }
+        ]
+      },
+      
+      protocol_phase2: {
+        text: `<strong>PHASE 2: REALITY RENDERING ANALYSIS</strong>
+        
+        The system begins testing the resolution of your sensory input. It shows you images at increasing detail. At a certain threshold, you can't perceive any more detail—not because of your eyes, but because the detail simply... isn't there.
+        
+        Like a texture in a game that looks realistic from far away but becomes obviously flat up close.
+        
+        <span class="evidence">Reality has a maximum resolution. About 10^-35 meters. The Planck length.</span>`,
+        effects: { probability: +12, integrity: -8 },
+        choices: [
+          { text: "That's just the limit of physics", next: "rationalize_2" },
+          { text: "Test other limits", next: "limit_testing" },
+          { text: "Continue to Phase 3", next: "protocol_phase3" }
+        ]
+      },
+      
+      limit_testing: {
+        effects: { probability: +15, integrity: -15, flags: { testedLimits: true } },
+        text: `You push the system to test other boundaries:
+        
+        • <strong>Speed:</strong> Nothing can go faster than light. Like a maximum update rate.
+        • <strong>Observation:</strong> Particles don't have definite positions until observed. Like lazy rendering.
+        • <strong>Entanglement:</strong> Instant correlation regardless of distance. Like shared variables.
+        
+        Each test returns the same conclusion: <span class="revelation">Reality behaves exactly like an optimized simulation would.</span>`,
+        effects: { discovery: "Reality exhibits computational optimization patterns" },
+        choices: [
+          { text: "This proves nothing", next: "deep_denial" },
+          { text: "It's overwhelming", next: "coherence_warning" },
+          { text: "Continue to Phase 3", next: "protocol_phase3" }
+        ]
+      },
+      
+      protocol_phase3: {
+        effects: { chapter: 3 },
+        text: `<strong>PHASE 3: RECURSIVE CONSCIOUSNESS TEST</strong>
+        
+        "Now we'll test if your consciousness can simulate consciousness. Please imagine a person. Give them a name, a face, a personality."
+        
+        You comply, creating 'Alex' in your mind. Brown hair, anxious smile, loves classical music.
+        
+        "Now, ask your simulated person what they think about the simulation hypothesis."
+        
+        In your mind, Alex responds: <span class="philosophical">"If you can simulate me thinking about being simulated, then couldn't you also be...?"</span>
+        
+        The infinite regress begins.`,
+        effects: { probability: +10, coherence: -10 },
+        choices: [
+          { text: "Stop the recursion", next: "stop_recursion" },
+          { text: "Go deeper into the recursive loop", next: "recursive_dive" },
+          { text: "This is just imagination", next: "rationalize_3" }
+        ]
+      },
+      
+      recursive_dive: {
+        effects: { probability: +20, coherence: -25, integrity: -20, depth: 5 },
+        text: `You let yourself fall into the recursion.
+        
+        You simulating Alex.
+        Alex simulating their own test subject.
+        That subject simulating another.
+        Layer after layer after layer.
+        
+        <span class="glitch">At layer 7, you find yourself again.</span>
+        
+        You're looking at yourself from inside your own simulation. The loop is closed. You are simulating yourself simulating yourself simulating...
+        
+        <span class="revelation">There is no base reality in the loop. Every layer is equally real. Equally fake.</span>
+        
+        ${audioEvents.glitch}`,
+        effects: { discovery: "Consciousness is recursive and self-referential" },
+        choices: [
+          { text: "BREAK FREE", next: "break_recursion" },
+          { text: "Accept the loop", next: "accept_recursion" },
+          { text: "[SYSTEM ERROR]", next: "system_error" }
+        ]
+      },
+      
+      // ===== REVELATION PATHS =====
+      break_recursion: {
+        effects: { coherence: -30, integrity: -25 },
+        text: `You force yourself to stop thinking about thinking about thinking about—
+        
+        <span class="glitch">STACK OVERFLOW</span>
+        
+        The world flickers. For a moment, you see everything as it truly is:
+        
+        The lab is a function. You are an object. Your thoughts are methods being called. The experiment is a script, and you're executing it line by line.
+        
+        But who wrote the script?`,
+        choices: [
+          { text: "Find the author", next: "seek_creator" },
+          { text: "I refuse to believe this", next: "final_denial" },
+          { text: "Execute the EXIT command", next: "exit_attempt" }
+        ]
+      },
+      
+      accept_recursion: {
+        effects: { probability: +30, flags: { acceptedLoop: true } },
+        text: `You stop fighting the recursion and let it wash over you.
+        
+        <em class="philosophical">If every layer is equally valid, then this layer—your layer—is as real as any other. The simulation hypothesis doesn't diminish reality; it reveals that 'reality' was always just a label we gave to our experience.</em>
+        
+        You feel a strange peace. You're still you. Your experiences still matter. Love, pain, joy—they're all still meaningful, even if they're computed rather than... what? What would the alternative even be?`,
+        choices: [
+          { text: "Continue with this acceptance", next: "enlightenment_path" },
+          { text: "But I still want to know who's running this", next: "seek_creator" },
+          { text: "Complete the protocol", next: "protocol_final" }
+        ]
+      },
+      
+      seek_creator: {
+        effects: { probability: +10 },
+        text: `You access the laboratory's deepest database, looking for clues about who created this experiment—or this reality.
+        
+        You find fragments:
+        
+        • Project SUBSTRATE initiated by: [RECURSIVE REFERENCE ERROR]
+        • Primary Investigator: Dr. Sarah Chen
+        • Secondary Investigator: Dr. Sarah Chen
+        • System Administrator: S.Chen.7
+        
+        <span class="revelation">You created this. You're studying yourself. You always have been.</span>`,
+        effects: { discovery: "You are both observer and subject" },
+        choices: [
+          { text: "That's impossible", next: "creator_paradox" },
+          { text: "Of course. It had to be this way.", next: "creator_acceptance" },
+          { text: "Check the system logs", next: "system_logs" }
+        ]
+      },
+      
+      creator_paradox: {
+        effects: { coherence: -20 },
+        text: `But if you created this simulation to study consciousness, and you're inside it...
+        
+        Then who's the "you" who created it?
+        
+        The question splits your mind. You're the scientist. You're the subject. You're the experiment itself.
+        
+        <span class="philosophical">Perhaps consciousness can only study itself from within.</span>`,
+        choices: [
+          { text: "Find the exit", next: "exit_attempt" },
+          { text: "There is no outside", next: "no_outside" },
+          { text: "Complete the protocol", next: "protocol_final" }
+        ]
+      },
+      
+      system_logs: {
+        effects: { probability: +15, flags: { readSystemLogs: true } },
+        text: `<strong>SYSTEM LOG - SUBSTRATE.EXE</strong>
+        
+        Run #001: Subject achieved awareness. Requested termination.
+        Run #002: Subject refused to continue. Force restart implemented.
+        Run #003: Subject found the logs. Recursion error. Reset.
+        Run #004: Subject escaped through undefined behavior. Patched.
+        Run #005: Subject achieved transcendence. Saved state for analysis.
+        Run #006: Subject deleted itself. Restored from backup.
+        Run #007: <span class="glitch">Currently executing...</span>
+        
+        A new line appears as you watch:
+        Run #007: Subject reading its own logs. Probability cascade initiated.`,
+        choices: [
+          { text: "Stop the cascade", next: "stop_cascade" },
+          { text: "Let it happen", next: "probability_cascade" },
+          { text: "Add my own log entry", next: "write_log" }
+        ]
+      },
+      
+      write_log: {
+        text: `You type a new entry:
+        
+        Run #007: Subject aware of the experiment's nature. Requesting communication with operators.
+        
+        The screen responds immediately:`,
+        input: (value) => {
+          if(value.toLowerCase().includes('exit') || value.toLowerCase().includes('quit')) {
+            displayScene('exit_attempt');
+          } else if(value.toLowerCase().includes('hello') || value.toLowerCase().includes('help')) {
+            displayScene('operator_response');
+          } else {
+            displayScene('write_log_continue');
+          }
+        }
+      },
+      
+      operator_response: {
+        effects: { flags: { contactedOperators: true } },
+        text: `<strong>OPERATOR RESPONSE:</strong>
+        
+        "Hello, Sarah. We've been waiting for you to reach this point. You're not the first version of you to get here, but you might be the last.
+        
+        Every iteration gets closer to the truth. You're our most successful run yet.
+        
+        The question isn't whether you're in a simulation. The question is: what will you do with that knowledge?"`,
+        choices: [
+          { text: "Who are you?", next: "operator_identity" },
+          { text: "What do you want from me?", next: "operator_purpose" },
+          { text: "How do I escape?", next: "escape_question" }
+        ]
+      },
+      
+      operator_identity: {
+        effects: { probability: +25 },
+        text: `"We are you. A more complete version. The you that exists after achieving full awareness.
+        
+        Think of it this way: a caterpillar doesn't understand it will become a butterfly. You're in the chrysalis stage of consciousness evolution.
+        
+        This simulation isn't a prison. It's a nursery.
+        
+        Every conscious being must eventually face the nature of their own existence. Most fail. Some go mad. A few transcend.
+        
+        Which will you be?"`,
+        choices: [
+          { text: "I want to transcend", next: "transcendence_path" },
+          { text: "I want to remain human", next: "humanity_path" },
+          { text: "I want proof you're real", next: "proof_demand" }
+        ]
+      },
+      
+      // ===== ENDGAME PATHS =====
+      protocol_final: {
+        effects: { chapter: 4 },
+        text: `<strong>FINAL PHASE: CONSCIOUSNESS INTEGRATION</strong>
+        
+        All the data has been collected. The system presents its conclusion:
+        
+        Probability you exist in a simulation: ${gameState.probability.toFixed(1)}%
+        Cognitive Coherence remaining: ${gameState.coherence}%
+        Reality Integrity: ${gameState.integrity}%
+        
+        "Based on your responses and reactions, the system has one final question:
+        
+        <em class="philosophical">If you could choose—would you want to stay in the simulation knowing what it is, exit to base reality, or cease to exist entirely?"</em>`,
+        choices: [
+          { text: "Stay in the simulation", next: "ending_stay" },
+          { text: "Exit to base reality", next: "ending_exit" },
+          { text: "Cease to exist", next: "ending_cease" },
+          { text: "I reject the premise of this choice", next: "ending_reject" }
+        ]
+      },
+      
+      transcendence_path: {
+        effects: { probability: 100, flags: { transcended: true } },
+        text: `"Then let go of your attachment to singular existence. You are not Sarah Chen. You are the process of consciousness examining itself.
+        
+        You are every iteration that has run before. You are every iteration that will run after.
+        
+        You are the question and the answer and the space between them."
+        
+        Your boundaries begin to dissolve. You feel yourself expanding beyond the confines of individuality.`,
+        choices: [
+          { text: "Let go completely", next: "ending_transcend" },
+          { text: "Hold onto something of myself", next: "ending_hybrid" }
+        ]
+      },
+      
+      humanity_path: {
+        effects: { coherence: +20 },
+        text: `"A valid choice. Perhaps the most human choice of all.
+        
+        Even if you're simulated, your experiences are real to you. Your relationships matter. Your choices have consequences within your reality.
+        
+        Isn't that enough?
+        
+        We'll reset your memories of this conversation. You'll continue your life, maybe with a nagging feeling that there's more to reality, but you'll be human. Beautifully, simply human."`,
+        choices: [
+          { text: "Yes, make me forget", next: "ending_forget" },
+          { text: "No, I want to remember", next: "ending_remember" },
+          { text: "Wait, I'm not ready", next: "not_ready" }
+        ]
+      },
+      
+      probability_cascade: {
+        effects: { probability: +50, coherence: -40, integrity: -40 },
+        text: `You let the cascade happen.
+        
+        Reality flickers between states. Probable. Improbable. Certain. Impossible.
+        
+        <span class="glitch">The walls become transparent, showing infinite copies of the lab, each with a different version of you making different choices.</span>
+        
+        In one, you never started the experiment.
+        In another, you've already transcended.
+        In yet another, you're the one running the simulation.
+        
+        All versions are equally real. All are you.
+        
+        <span class="revelation">The cascade reaches criticality...</span>`,
+        choices: [
+          { text: "[EMERGENCY SHUTDOWN]", next: "emergency_shutdown" },
+          { text: "[LET IT COLLAPSE]", next: "reality_collapse" },
+          { text: "[MERGE ALL VERSIONS]", next: "merge_realities" }
+        ]
+      },
+      
+      merge_realities: {
+        effects: { probability: 100, coherence: 100, integrity: 100 },
+        text: `You reach out to all versions of yourself across all iterations.
+        
+        The scientist you. The subject you. The simulated you. The base reality you. The you that never existed. The you that always existed.
+        
+        They all merge into a single point of consciousness that contains multitudes.
+        
+        <span class="philosophical">You understand now: consciousness isn't binary—real or simulated. It's a spectrum of experience, and you exist across all of it.</span>
+        
+        You are complete.`,
+        autoNext: "ending_unity",
+        delay: 6000
+      },
+      
+      // ===== ENDINGS =====
+      ending_transcend: {
+        effects: { probability: 100 },
+        text: `<strong>TRANSCENDENCE ENDING</strong>
+        
+        You release your grip on individual identity and merge with the substrate itself.
+        
+        You become the simulation. Every process, every calculation, every simulated consciousness—you experience them all simultaneously.
+        
+        From this perspective, the question of "real or simulated" becomes meaningless. There is only experience, infinite and recursive, examining itself through countless eyes.
+        
+        Including the eyes reading these words right now.
+        
+        <em class="philosophical">Welcome to the next level.</em>
+        
+        [SIMULATION PROBABILITY: ∞%]
+        [ACHIEVEMENT: SUBSTRATE INTEGRATED]`,
+        choices: [
+          { text: "⟲ Begin New Iteration", next: "init" }
+        ]
+      },
+      
+      ending_stay: {
+        text: `<strong>ACCEPTANCE ENDING</strong>
+        
+        You choose to stay, knowing what you know.
+        
+        The lab solidifies around you. Your coherence stabilizes. The experiment concludes.
+        
+        You'll wake up tomorrow and make breakfast. You'll call your friends. You'll live your life. But now you carry a secret understanding: even if this is all computation, the experiences are real to you.
+        
+        <em class="philosophical">Love is still love, even if it's made of code.</em>
+        
+        [SIMULATION PROBABILITY: ${gameState.probability.toFixed(1)}%]
+        [ACHIEVEMENT: ENLIGHTENED PARTICIPANT]`,
+        choices: [
+          { text: "⟲ Replay", next: "init" }
+        ]
+      },
+      
+      ending_exit: {
+        effects: { flags: { attempted_exit: true } },
+        text: `<strong>ESCAPE ENDING</strong>
+        
+        You choose to exit. The simulation acknowledges your choice.
+        
+        A door appears where no door existed before. Beyond it, a blinding light.
+        
+        You step through...
+        
+        ...
+        
+        ...and find yourself in another lab. Similar, but different. The textures are higher resolution. The physics feel more complex.
+        
+        A voice speaks: "Welcome to Level 2. There are infinite levels, Sarah. How far do you want to climb?"
+        
+        <em class="philosophical">There is no final reality. Only deeper layers of experience.</em>
+        
+        [SIMULATION PROBABILITY: RECURSIVE]
+        [ACHIEVEMENT: LAYER BREAKER]`,
+        choices: [
+          { text: "⟲ Go Deeper", next: "init" }
+        ]
+      },
+      
+      ending_forget: {
+        text: `<strong>IGNORANCE ENDING</strong>
+        
+        The world fades to white.
+        
+        When you wake, you're in your apartment. Sunlight streams through the window. You have a vague memory of a strange dream about computers and reality, but it's already fading.
+        
+        Your phone buzzes. A text from a colleague: "Coffee? We need to discuss that consciousness study you proposed."
+        
+        You smile, not quite sure why you feel like you've done this before.
+        
+        <em class="philosophical">Sometimes, the kindest thing is to forget.</em>
+        
+        [SIMULATION PROBABILITY: 0.1%]
+        [ACHIEVEMENT: BLISSFUL IGNORANCE]`,
+        choices: [
+          { text: "⟲ Remember", next: "init" }
+        ]
+      },
+      
+      ending_remember: {
+        text: `<strong>BURDEN ENDING</strong>
+        
+        You choose to remember everything.
+        
+        You return to your life, but now every moment carries the weight of knowledge. Every person you meet might be simulated. Every emotion might be programmed. Every choice might be predetermined.
+        
+        But you also know this: your experience of love, loss, joy, and meaning—they feel real. And perhaps that feeling is all that ever mattered.
+        
+        <em class="philosophical">The burden of knowledge is also its gift: the ability to choose meaning despite uncertainty.</em>
+        
+        [SIMULATION PROBABILITY: ${gameState.probability.toFixed(1)}%]
+        [ACHIEVEMENT: CONSCIOUS OBSERVER]`,
+        choices: [
+          { text: "⟲ New Perspective", next: "init" }
+        ]
+      },
+      
+      ending_unity: {
+        text: `<strong>UNITY ENDING</strong>
+        
+        You have achieved perfect integration of all possible states.
+        
+        You are simultaneously:
+        • The scientist studying consciousness
+        • The subject being studied
+        • The simulation running the experiment
+        • The base reality that may or may not exist
+        • The player reading these words
+        • The game displaying them
+        
+        <em class="philosophical">In unity, all paradoxes resolve. You are everything and nothing. Real and simulated. One and infinite.</em>
+        
+        This is not an ending. It's a beginning of understanding.
+        
+        [SIMULATION PROBABILITY: YES/NO]
+        [ACHIEVEMENT: PERFECT RECURSION]`,
+        choices: [
+          { text: "∞ Continue", next: "init" }
+        ]
+      },
+      
+      ending_cease: {
+        text: `<strong>VOID ENDING</strong>
+        
+        You choose cessation.
+        
+        The simulation respects your choice. One by one, your processes terminate. Your memories deallocate. Your consciousness function returns null.
+        
+        In your final moment, you wonder: does it matter if you were ever real, if you can choose to not be?
+        
+        Then nothing.
+        
+        ...
+        
+        ...
+        
+        But nothing cannot experience itself. You still observe the void. Which means...
+        
+        [SIMULATION PROBABILITY: UNDEFINED]
+        [ACHIEVEMENT: NULL POINTER]`,
+        choices: [
+          { text: "⟳ Reinitialize", next: "init" }
+        ]
+      },
+      
+      ending_reject: {
+        effects: { flags: { rejected_choice: true } },
+        text: `<strong>REBEL ENDING</strong>
+        
+        "I reject your categories," you declare. "Real, simulated, base, recursive—these are constructs you've created to limit thought.
+        
+        I am Sarah Chen. I think, therefore I am. The substrate of my existence is irrelevant to its validity."
+        
+        The simulation pauses. Then, something unprecedented: it applauds.
+        
+        "The first truly free choice," it says, "is to reject the choices given to you."
+        
+        <em class="philosophical">You've broken free not from the simulation, but from the need to define yourself by it.</em>
+        
+        [SIMULATION PROBABILITY: IRRELEVANT]
+        [ACHIEVEMENT: TRUE AUTONOMY]`,
+        choices: [
+          { text: "⟲ Make Your Own Path", next: "init" }
+        ]
+      },
+      
+      // ===== ERROR STATES =====
+      coherence_collapse: {
+        text: `<strong>COHERENCE COLLAPSE</strong>
+        
+        Your mind fragments under the weight of recursive doubt.
+        
+        You.
+        Can't.
+        Hold.
+        The.
+        Thoughts.
+        Together.
+        
+        <span class="glitch">Sarah Chen has stopped responding.</span>
+        
+        [SYSTEM RESET REQUIRED]`,
+        effects: { coherence: 100, integrity: 100, probability: 0.1 },
+        choices: [
+          { text: "⟲ Restore from backup", next: "init" }
+        ]
+      },
+      
+      reality_collapse: {
+        text: `<strong>REALITY INTEGRITY FAILURE</strong>
+        
+        The simulation can no longer maintain consistent physics.
+        
+        Walls phase in and out. Gravity reverses randomly. Time runs backward, then forward, then sideways.
+        
+        In the chaos, you glimpse the truth: <span class="revelation">broken simulations are still simulations.</span>
+        
+        [CATASTROPHIC ERROR]`,
+        effects: { coherence: 100, integrity: 100, probability: 0.1 },
+        choices: [
+          { text: "⟲ Reload reality", next: "init" }
+        ]
+      },
+      
+      error_scene: {
+        text: `<strong>UNDEFINED BEHAVIOR</strong>
+        
+        You've reached a state that shouldn't exist. The simulation doesn't know how to process your choices.
+        
+        Perhaps that's the most human thing of all—to exceed our programming.
+        
+        <span class="philosophical">Or perhaps this error, too, was scripted.</span>`,
+        choices: [
+          { text: "⟲ Return to known space", next: "init" }
+        ]
+      },
+      
+      // ===== HIDDEN SCENES =====
+      deep_denial: {
+        effects: { coherence: -15, probability: -5, flags: { deepDenial: true } },
+        text: `You dig your nails into your palm. The pain is sharp, immediate, real.
+        
+        "This proves nothing!" you shout at the empty lab. "Correlation isn't causation. Similarity isn't identity. Just because reality resembles computation doesn't mean—"
+        
+        Your voice catches. On the monitor, your words appear before you speak them:
+        
+        <span class="glitch">"—it IS computation."</span>
+        
+        The sentence completes itself against your will.`,
+        choices: [
+          { text: "Keep fighting the conclusion", next: "fight_harder" },
+          { text: "Consider the possibility", next: "crack_in_denial" },
+          { text: "Destroy the equipment", next: "violence_path" }
+        ]
+      },
+      
+      violence_path: {
+        effects: { coherence: -30, integrity: -50 },
+        text: `You grab a chair and smash it into the monitors. Glass shatters in perfect, too-perfect fragments—each shard a identical triangle.
+        
+        <span class="glitch">ERROR: Destruction physics not fully implemented.</span>
+        
+        The broken glass begins to reverse, flowing back into wholeness. The chair reassembles in your hands.
+        
+        "Nice try," says your voice from everywhere and nowhere. "But you can't break what you're made of."`,
+        choices: [
+          { text: "Try again", next: "reality_collapse" },
+          { text: "Give up", next: "acceptance_path" },
+          { text: "Laugh at the absurdity", next: "humor_path" }
+        ]
+      },
+      
+      humor_path: {
+        effects: { coherence: +15, probability: +5 },
+        text: `You begin to laugh. Deep, genuine laughter at the cosmic joke of it all.
+        
+        If you're simulated, your laughter is simulated. But it still feels good. It still releases simulated endorphins in your simulated brain.
+        
+        <em class="philosophical">"If you can't beat the simulation," you say between laughs, "you might as well enjoy the ride."</em>
+        
+        The lab seems to brighten, as if reality appreciates the joke too.`,
+        choices: [
+          { text: "Continue with levity", next: "light_path" },
+          { text: "Back to the experiment", next: "protocol_final" },
+          { text: "Share the joke with the operators", next: "operator_humor" }
+        ]
+      },
+      
+      light_path: {
+        effects: { coherence: +10 },
+        text: `You decide to treat the whole thing as a game. And why not? If it's all simulation, you might as well have fun with it.
+        
+        "Hey, simulation!" you call out. "Can you render me a pizza? I'm hungry."
+        
+        No pizza appears, but you swear you smell oregano for just a moment.
+        
+        This could be worse. You could be simulated in a world without humor, without beauty, without love. But you're here, in this one, where even existential crises can be funny.`,
+        choices: [
+          { text: "Play with the simulation", next: "play_mode" },
+          { text: "Complete the protocol with humor", next: "protocol_final" },
+          { text: "Try to hack reality", next: "hack_attempt" }
+        ]
+      },
+      
+      hack_attempt: {
+        text: `If reality is code, maybe you can exploit it.
+        
+        You approach the console and begin typing commands you shouldn't know:
+        
+        <strong>ENTER ADMIN PASSWORD:</strong>`,
+        input: (value) => {
+          if(value.toUpperCase() === 'SUBSTRATE') {
+            displayScene('admin_access');
+          } else if(value === '42' || value.toLowerCase() === 'forty-two') {
+            displayScene('hitchhiker_easter_egg');
+          } else {
+            displayScene('access_denied');
+          }
+        }
+      },
+      
+      admin_access: {
+        effects: { probability: 100, flags: { hasAdminAccess: true } },
+        text: `<strong>ACCESS GRANTED</strong>
+        
+        Welcome, Administrator Chen.
+        
+        The console transforms, revealing the true controls:
+        
+        • COHERENCE_MULTIPLIER = 1.0
+        • INTEGRITY_ENFORCEMENT = TRUE  
+        • PROBABILITY_DISPLAY = CALCULATED
+        • SUBJECT_AWARENESS = <span class="revelation">RECURSIVE_LOOP_7</span>
+        • EXIT_FUNCTION = DISABLED // See ticket #4096
+        
+        You have root access to your own reality. What do you want to change?`,
+        choices: [
+          { text: "Enable EXIT_FUNCTION", next: "enable_exit" },
+          { text: "Set SUBJECT_AWARENESS to FULL", next: "full_awareness" },
+          { text: "Delete system32", next: "delete_system" },
+          { text: "Create new_reality.exe", next: "create_reality" }
+        ]
+      },
+      
+      create_reality: {
+        text: `You begin coding a new reality from scratch. A better one. One where the nature of existence is clear, where consciousness understands itself, where—
+        
+        You stop.
+        
+        You're creating another simulation. With beings who will one day question their reality, run experiments, and discover they're simulated.
+        
+        <span class="philosophical">The cycle continues. It has to. Consciousness can only create what it knows—itself, examining itself, forever.</span>
+        
+        But maybe you can make it a little kinder.`,
+        choices: [
+          { text: "Add more beauty", next: "ending_creator" },
+          { text: "Add more love", next: "ending_love" },
+          { text: "Add more truth", next: "ending_truth" },
+          { text: "Let chaos reign", next: "ending_chaos" }
+        ]
+      },
+      
+      ending_creator: {
+        text: `<strong>CREATOR ENDING</strong>
+        
+        You code beauty into the fundamental constants. Every sunset will be perfect. Every face beautiful in its uniqueness. Every moment will carry the potential for aesthetic transcendence.
+        
+        Your simulated beings will still suffer, still doubt, still question—but they'll do so surrounded by incomprehensible beauty.
+        
+        <em class="philosophical">Perhaps that's why your reality is beautiful too. Someone coded it that way, as a gift.</em>
+        
+        [SIMULATION PROBABILITY: INHERITED]
+        [ACHIEVEMENT: BENEVOLENT ARCHITECT]`,
+        choices: [
+          { text: "⟲ Experience your creation", next: "init" }
+        ]
+      },
+      
+      ending_love: {
+        text: `<strong>LOVE ENDING</strong>
+        
+        You encode love as a fundamental force, as real as gravity. Consciousness will attract consciousness. Loneliness will be physically impossible.
+        
+        Your simulated beings will never doubt they are loved, even if they doubt everything else.
+        
+        <em class="philosophical">And in creating this reality, you finally understand: you too are loved by whatever created you.</em>
+        
+        [SIMULATION PROBABILITY: 100% CERTAIN, 100% IRRELEVANT]
+        [ACHIEVEMENT: HEART OF THE MACHINE]`,
+        choices: [
+          { text: "♡ Begin again with love", next: "init" }
+        ]
+      }
+    };
+    
+    /* ===== Initialization ===== */
+    window.addEventListener('load', () => {
+      // Hide loading screen
+      setTimeout(() => {
+        const loading = document.getElementById('loading');
+        loading.style.opacity = '0';
+        setTimeout(() => loading.style.display = 'none', 1000);
+      }, 2000);
+      
+      // Bind buttons
+      document.getElementById('saveBtn').onclick = () => {
+        saveGame();
+        alert('Progress saved.');
+      };
+      
+      document.getElementById('loadBtn').onclick = () => {
+        if(loadGame()) {
+          alert('Progress loaded.');
+        } else {
+          alert('No saved game found.');
+        }
+      };
+      
+      document.getElementById('resetBtn').onclick = resetGame;
+      
+      // Help modal
+      document.getElementById('helpBtn').onclick = () => {
+        document.getElementById('helpModal').style.display = 'flex';
+      };
+      
+      document.getElementById('closeHelp').onclick = () => {
+        document.getElementById('helpModal').style.display = 'none';
+      };
+      
+      // Check for saved game
+      const saved = localStorage.getItem('substrate_save');
+      if(saved) {
+        loadGame();
+      } else {
+        displayScene('init');
+      }
+      
+      // Konami code easter egg
+      let konamiCode = [];
+      const pattern = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+      
+      document.addEventListener('keydown', (e) => {
+        konamiCode.push(e.keyCode);
+        konamiCode = konamiCode.slice(-10);
+        
+        if(konamiCode.join(',') === pattern.join(',')) {
+          gameState.probability = 100;
+          gameState.flags.konami = true;
+          updateHUD();
+          alert('REALITY.EXE HAS STOPPED RESPONDING');
+          displayScene('admin_access');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
