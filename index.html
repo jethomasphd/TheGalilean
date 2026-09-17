@@ -119,11 +119,15 @@ h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
 .stmap{margin:0 0 clamp(26px,4vh,40px);border:1px solid var(--rule);background:var(--bg-2)}
 .stmap-canvas{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--bg-2)}
 .stmap-canvas svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.stmap figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px;padding:10px 14px 6px;border-top:1px solid var(--rule)}
-.stmap-when{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);line-height:1.6}
-.stmap-found{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-2)}
-.stmap-time{padding:8px 14px 12px}
+.stmap figcaption{display:block;padding:12px 14px 4px;border-top:1px solid var(--rule)}
+.stmap-when{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);line-height:1.6;margin:0 0 6px}
+.stmap-look{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--ink-2);margin:0 0 4px}
+.stmap-found{display:none}
+.stmap-time{padding:22px 14px 12px}
 .tl-track{position:relative;height:40px;border-top:1px solid var(--rule)}
+.tl-now{position:absolute;top:-22px;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.tl-now--l{transform:translateX(-100%);margin-left:6px}
+.tl-now--r{transform:none;margin-left:-6px}
 .tl-tick:nth-child(even) i{height:17px}
 .tl-tick{position:absolute;top:-1px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px}
 .tl-tick i{display:block;width:1px;height:6px;background:var(--ink-3)}
@@ -135,14 +139,10 @@ h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
 .stmap[data-view="levant"],.stmap[data-view="jerusalem"]{max-width:620px;margin-inline:auto}
 .mk-route{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .mk-route path{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:5 5;opacity:.9}
-.mk{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;pointer-events:none}
-.mk i{display:block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35),0 1px 4px rgba(0,0,0,.35);flex:none}
-.mk b{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.06em;color:#1a1611;background:rgba(255,250,240,.9);padding:2px 6px;border:1px solid rgba(0,0,0,.25);white-space:nowrap;line-height:1.3}
-.mk--l{flex-direction:row-reverse;transform:translate(calc(-100% + 5.5px),-50%)}
-.mk--a{flex-direction:column-reverse;transform:translate(-50%,calc(-100% + 5.5px))}
-.mk--b{flex-direction:column;transform:translate(-50%,-5.5px)}
-.mk--l b,.mk--a b,.mk--b b{margin:0}
-.stmap-credit{flex-basis:100%;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--ink-3);line-height:1.5}
+.mk{position:absolute;transform:translate(-50%,-50%);display:block;pointer-events:none}
+.mk i{display:block;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.4);animation:mkpulse 3s ease-in-out infinite}
+@keyframes mkpulse{0%,100%{box-shadow:0 0 0 1.5px rgba(0,0,0,.45),0 1px 5px rgba(0,0,0,.4)}50%{box-shadow:0 0 0 1.5px rgba(0,0,0,.45),0 0 0 7px rgba(201,162,39,.28)}}
+.stmap-credit{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--ink-3);line-height:1.5;padding:0 14px 12px}
 /* ─── specimens (figures) ─── */
 .spec{margin:2.2em 0 2.4em}
 .spec img{width:100%;filter:grayscale(var(--desat)) sepia(var(--sepia)) brightness(var(--bright)) contrast(1.03);transition:filter 1.4s ease;background:var(--bg-2)}
@@ -272,7 +272,7 @@ blockquote{margin:0}
   <h2 id="ntr" class="small-head">Before you begin</h2>
   <p>This is not a sermon, and it is not an attempt to debunk anything. It is a guided walk through the physical and written evidence for a man who lived in Galilee two thousand years ago. Nearly everything you will meet here can be visited: a stone in a museum in Jerusalem, a coin in a drawer in London, a scrap of papyrus in Manchester, a page in a library in Florence. Where a famous piece of evidence turns out to be weaker than its reputation, I say so. Where an obscure one turns out to be stronger, I say that too.</p>
   <p>You do not need to know anything about ancient history, or about me, to follow it. Every technical term is explained the first time it appears. Every claim is sourced at the end.</p>
-  <p class="note-close">Come with whatever you believe or doubt. The stones do not ask.</p>
+  <p class="note-close">Whatever you believe or doubt, the stones do not ask.</p>
 </section>
 <!-- ═══════════════════════════ PROLOGUE ═══════════════════════════ -->
 <section class="station" id="prologue" data-hour="museum">
@@ -283,7 +283,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="levant" data-marks="caesarea" data-year="31" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">26–36 CE</span><span class="stmap-found">The Pilate Stone · unearthed 1961</span></figcaption>
+    <figcaption><span class="stmap-when">26–36 CE · Pilate’s years as governor</span><p class="stmap-look">Caesarea is on the coast, halfway down the left edge of the map, where the Plain of Sharon meets the sea. Jerusalem is near the bottom of the map, on the ridge west of the Dead Sea; Galilee and its lake are at the top right. The marker on the timeline below sits in the decade of Pilate’s governorship.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -335,7 +335,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="levant" data-marks="jerusalem-tombs" data-year="45" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">First century CE</span><span class="stmap-found">The Caiaphas ossuary · found 1990</span></figcaption>
+    <figcaption><span class="stmap-when">First century CE · the Caiaphas tomb</span><p class="stmap-look">Jerusalem is near the bottom of the map, on the high ground west of the Dead Sea. The tomb of the Caiaphas family lay a short walk south of the city walls, in the necropolis that ringed the city; the dot marks the spot. The timeline marker sits in the middle of the first century, when the tomb was in use.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -382,7 +382,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="wide" data-marks="rome" data-year="64" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">64 CE to c. 200 CE</span><span class="stmap-found">Tacitus, c. 116 · the Palatine graffito, c. 200</span></figcaption>
+    <figcaption><span class="stmap-when">64 CE to c. 200 CE · Rome</span><p class="stmap-look">Rome is on the west coast of Italy, the boot at the upper left; the dot sits on the city. Jerusalem is toward the right of the map, on the coast below Syria. The fire of 64 CE, Tacitus’s account of it written around 116, and the Palatine graffito of around 200 all belong to Rome; the news they preserve came from Judaea. The timeline marker sits at the fire.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -426,9 +426,9 @@ blockquote{margin:0}
     </figure>
   </div>
 
-  <p class="rv">Think about what the joke needed in order to work. By around the year 200, a slave in the emperor’s own household could be mocked, by other slaves, for worshipping a man who had been crucified, and everyone in the room got the punchline without explanation. The donkey’s head was a standard slur against Jews and Christians. The cross needed no gloss at all. Crucifixion was the most degrading death the Roman world had. It was reserved for slaves, rebels, and bandits. Roman citizens were exempt from it by law. Cicero, the great orator, told a jury that the very word “cross” should be kept far from a Roman citizen’s body, thoughts, eyes, and ears. The Jewish historian Josephus called it “the most wretched of deaths.”</p>
+  <p class="rv">The joke needed something in order to work. By around the year 200, a slave in the emperor’s own household could be mocked, by other slaves, for worshipping a man who had been crucified, and everyone in the room got the punchline without explanation. The donkey’s head was a standard slur against Jews and Christians. The cross needed no gloss at all. Crucifixion was the most degrading death the Roman world had. It was reserved for slaves, rebels, and bandits. Roman citizens were exempt from it by law. Cicero, the great orator, told a jury that the very word “cross” should be kept far from a Roman citizen’s body, thoughts, eyes, and ears. The Jewish historian Josephus called it “the most wretched of deaths.”</p>
 
-  <p class="rv">And the Christians put it at the centre of everything. They did not hide it or soften it into a noble martyrdom. Paul, writing in the fifties, says the cross is “a stumbling block to Jews and folly to Gentiles,” and that he will preach nothing else. Apply the first test. No one designing a religion to appeal to the Roman world would choose a crucified founder. You would carry that fact only if it were true and you had no choice, and if something had happened afterward that made the shame impossible to hide and unnecessary to try.</p>
+  <p class="rv">And the Christians put it at the centre of everything. They did not hide it or soften it into a noble martyrdom. Paul, writing in the fifties, says the cross is “a stumbling block to Jews and folly to Gentiles,” and that he will preach nothing else. This is the first test at its sharpest. No one designing a religion to appeal to the Roman world would choose a crucified founder. You would carry that fact only if it were true and you had no choice, and if something had happened afterward that made the shame impossible to hide and unnecessary to try.</p>
 
   <p class="rv">One more thing the graffito and Tacitus have in common. Neither of them thinks Rome did anything unusual. Rome did not kill Jesus out of some special wickedness. It killed him because it was orderly: a governor keeping the peace at a festival, a high priest protecting the Temple, a legal procedure that worked exactly as designed. The system had no category for the man in front of it, so it used the category it had. That is a more unsettling thought than villainy, and it is the one the evidence supports.</p>
 
@@ -445,7 +445,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="galilee" data-marks="nazareth,capernaum,magdala,beatitudes" data-year="29" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">c. 4 BCE – 30 CE</span><span class="stmap-found">Nazareth to the north shore of the lake</span></figcaption>
+    <figcaption><span class="stmap-when">c. 4 BCE – 30 CE · Galilee</span><p class="stmap-look">The Sea of Galilee is the lake at the right. Capernaum sits on its northern tip and Magdala on the western shore below it; the hillside of the Beatitudes rises between the two, above the springs at Tabgha. Nazareth is at the lower left, a long day’s walk from the lake, with Sepphoris and Cana in the hills between. The dotted line follows the order of the chapter. The timeline marker sits in the year of the sermon.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -554,7 +554,7 @@ blockquote{margin:0}
     <p class="bt-src">Matthew 5:3–12</p>
   </div>
 
-  <p class="rv">Notice what these sentences are not. They are not advice. They do not tell the poor to work harder, the grieving to cheer up, or the meek to stand up for themselves. They are announcements. They tell people who had never been told they had won anything that they have already won, and they are spoken by a man who was about to become poor, grieving, meek, hungry, and persecuted himself, and to be shown no mercy at all. Keep these nine sentences in mind. We will come back to this hillside at the end, because the whole story does.</p>
+  <p class="rv">These sentences are not advice. They do not tell the poor to work harder, the grieving to cheer up, or the meek to stand up for themselves. They are announcements. They tell people who had never been told they had won anything that they have already won, and they are spoken by a man who was about to become poor, grieving, meek, hungry, and persecuted himself, and to be shown no mercy at all. The story comes back to this hillside at the end, because the whole story does.</p>
 </section>
 <!-- ═══════════════════════════ IV · THE MONEY THAT CONDEMNS ═══════════════════════════ -->
 <section class="station" id="s4" data-hour="afternoon">
@@ -565,7 +565,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="levant" data-marks="jericho-road,jerusalem" data-year="30" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Passover, c. 30 CE</span><span class="stmap-found">Up from Jericho to the Temple</span></figcaption>
+    <figcaption><span class="stmap-when">Passover, c. 30 CE · up to Jerusalem</span><p class="stmap-look">Jericho is in the Jordan valley near the bottom of the map, just west of the river and far below sea level. Jerusalem lies about fifteen miles to the west and a thousand metres higher, on the ridge; the pilgrims’ road between them, the dotted line, climbs through the wilderness of Judea. The timeline marker sits at the Passover of the crucifixion.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -588,7 +588,7 @@ blockquote{margin:0}
     <img src="assets/img/denarius.jpg" srcset="assets/img/denarius-800.jpg 800w, assets/img/denarius.jpg 1400w" sizes="(max-width: 760px) 100vw, 720px" alt="Silver denarius of Tiberius: obverse with the laureate head of the emperor, reverse with a seated female figure holding a sceptre and branch" width="1400" height="743" loading="lazy" decoding="async">
     <figcaption>
       <span class="spec-label">Silver denarius of Tiberius · 3.8 g · 18 mm · minted at Lyon · the “tribute penny” type · front: TI CAESAR DIVI AVG F AVGVSTVS · back: PONTIF MAXIM</span>
-      <span class="spec-note">A day’s pay for a labourer. This is the coin in the Gospel story. Its inscription, translated, reads: <i>Tiberius Caesar, son of the divine Augustus.</i> The back adds his other title: <i>High Priest.</i></span>
+      <span class="spec-note">A day’s pay for a labourer, and the coin in the Gospel story. Its inscription, translated, reads: <i>Tiberius Caesar, son of the divine Augustus.</i> The back adds his other title: <i>High Priest.</i></span>
       <span class="spec-credit">Photograph: Portable Antiquities Scheme, CC BY 2.0</span>
     </figcaption>
   </figure>
@@ -629,15 +629,15 @@ blockquote{margin:0}
     <p class="st-eyebrow">V · The texts · read against their own interest</p>
     <h2 class="st-title">Reading the Gospels Against Themselves</h2>
   </header>
-  <figure class="stmap rv" data-view="wide" data-marks="egypt,jerusalem" data-year="150" aria-label="Map and date for this station">
+  <figure class="stmap rv" data-view="wide" data-marks="egypt,jerusalem" data-year="150" data-route="0" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Events c. 28–30 CE · oldest copy c. 125–175 CE</span><span class="stmap-found">The texts, and where the oldest scrap surfaced</span></figcaption>
+    <figcaption><span class="stmap-when">Oldest copy c. 125–175 CE · events c. 28–30 CE</span><p class="stmap-look">The papyrus fragment came to light in Egypt, at the bottom of the map where the Nile reaches the sea. The trial it records took place in Jerusalem, at the right. The oldest surviving copy of a Gospel and the events it describes are separated by about a century and several hundred miles. The timeline marker sits at the copying of the fragment, not at the events.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
   <p class="rv">Before the story reaches its last night, it is worth pausing to show how historians read the Gospels, because the last night is where that reading gets tested. The four Gospels are the main sources for Jesus’s life, and they were written by believers, for believers, between roughly forty and seventy years after his death. That does not make them worthless as history. It means they have to be read the way a good detective reads any interested witness: looking hardest at the things the witness would rather not have said.</p>
 
-  <p class="rv">Start with the first test, embarrassment. Jesus began his public life by being baptised in the Jordan by John, a preacher who offered baptism as a sign of repentance for sin. That was awkward for the early church, which believed Jesus was sinless and greater than John. Watch what happens to the story over time. Mark, the earliest Gospel, states the baptism flatly. Matthew, written later, adds a scene in which John protests that it should be the other way around. Luke mentions the baptism only in passing. John’s Gospel, the latest, never quite says it happened at all. Four writers become steadily more uncomfortable with a fact none of them felt free to leave out. That is not how legends grow. It is how real memories get managed.</p>
+  <p class="rv">The first test, embarrassment, does the most work. Jesus began his public life by being baptised in the Jordan by John, a preacher who offered baptism as a sign of repentance for sin. That was awkward for the early church, which believed Jesus was sinless and greater than John. The story changes shape over time. Mark, the earliest Gospel, states the baptism flatly. Matthew, written later, adds a scene in which John protests that it should be the other way around. Luke mentions the baptism only in passing. John’s Gospel, the latest, never quite says it happened at all. Four writers become steadily more uncomfortable with a fact none of them felt free to leave out. That is not how legends grow. It is how real memories get managed.</p>
 
   <p class="rv">The Gospels keep many such details. Jesus’s own family thought he had gone mad; Mark says so directly. His home town rejected him, and Mark says that there “he could do no mighty work.” Peter, the disciple the church would later build on, denied three times, to a servant girl, that he even knew Jesus. All four Gospels keep that scene. Women were the first to find the tomb empty, in a culture where a woman’s testimony did not count in court, and the men did not believe them; every account keeps that too. And from the cross itself the Gospels preserve a cry that no theologian would ever have chosen to put in the mouth of God’s chosen one: “My God, my God, why have you forsaken me?”</p>
 
@@ -648,7 +648,7 @@ blockquote{margin:0}
 
   <span class="loc" data-place="egypt" data-hour="dusk" data-when="copied c. 125–175 CE" data-year="150" data-found="Bought in Egypt, 1920 · John Rylands Library, Manchester"></span>
 
-  <p class="rv">Now consider the oldest physical piece of the New Testament in existence. It is the size of a credit card. In 1920 a British scholar bought a batch of papyrus scraps in Egypt for a library in Manchester. In 1934 a young researcher sorting the batch recognised a few dozen Greek letters. The scrap is written on both sides, which means it came from a book with pages rather than a scroll. The handwriting style dates it to the second century, within a few decades of the Gospel’s composition. The text is from the eighteenth chapter of John’s Gospel. Of all the passages that could have survived on the oldest fragment we have, these are the ones that did.</p>
+  <p class="rv">The oldest physical piece of the New Testament in existence is smaller than most people expect. It is the size of a credit card. In 1920 a British scholar bought a batch of papyrus scraps in Egypt for a library in Manchester. In 1934 a young researcher sorting the batch recognised a few dozen Greek letters. The scrap is written on both sides, which means it came from a book with pages rather than a scroll. The handwriting style dates it to the second century, within a few decades of the Gospel’s composition. The text is from the eighteenth chapter of John’s Gospel. Of all the passages that could have survived on the oldest fragment we have, these are the ones that did.</p>
 
   <figure class="spec spec--tall rv">
     <img src="assets/img/p52.jpg" srcset="assets/img/p52-800.jpg 800w, assets/img/p52.jpg 1300w" sizes="(max-width: 760px) 100vw, 720px" alt="Papyrus 52, a small irregular fragment of papyrus with Greek uncial letters, the earliest known New Testament manuscript fragment" width="1300" height="1733" loading="lazy" decoding="async">
@@ -674,7 +674,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="jerusalem" data-marks="upper-room,gethsemane,caiaphas-house" data-year="30" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Thursday night, c. 30 CE</span><span class="stmap-found">The upper room · the Kidron valley · Gethsemane · the high priest’s house</span></figcaption>
+    <figcaption><span class="stmap-when">Thursday night, c. 30 CE · Jerusalem</span><p class="stmap-look">The Temple is the large enclosure at the right of the plan; the Upper City and Herod’s palace fill the western hill at the left. By tradition the upper room stood at the southern end of that hill, near the Zion Gate, and the high priest’s house on its slope facing the Temple. The Kidron valley runs down the right edge, and Gethsemane lies across it at the foot of the Mount of Olives. The dotted line follows the night: supper, the garden, the arrest, the hearing. The ancient walls are drawn in black; the modern walls, in red, are there for reference only.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -712,13 +712,13 @@ blockquote{margin:0}
     </figure>
   </div>
 
-  <p class="rv">What happened in the garden was reported by the people who slept through it. That is worth noticing. The disciples’ own account of their last night with their teacher is that he asked them to stay awake with him and they could not, and that when the arresting party arrived with torches and clubs, one of them swung a sword, cut off a servant’s ear, and then all of them ran away. Nobody polishes a founding story like that. They kept it because it was what happened, and because, by the time it was written down, the men who had run were the ones doing the telling.</p>
+  <p class="rv">What happened in the garden was reported by the people who slept through it. The disciples’ own account of their last night with their teacher is that he asked them to stay awake with him and they could not, and that when the arresting party arrived with torches and clubs, one of them swung a sword, cut off a servant’s ear, and then all of them ran away. Nobody polishes a founding story like that. They kept it because it was what happened, and because, by the time it was written down, the men who had run were the ones doing the telling.</p>
 
   <span class="loc" data-place="caiaphas-house" data-hour="night" data-when="Thursday night into Friday" data-year="30" data-found="Upper City, Jerusalem"></span>
 
   <p class="rv">Jesus was taken back across the valley and up into the Upper City, the wealthy western hill where the priestly families lived. Excavations there in the 1970s uncovered their houses: mosaic floors, painted walls, stone furniture, private ritual baths, and in one burnt room a stone weight still bearing the name of a priestly family, exactly where it fell when the Romans destroyed the city in 70 CE. To one of these houses, Caiaphas’s, Jesus was brought at night for what the Gospels call a trial and most historians call a hearing: the high priest and his advisers working out, before the governor woke, what charge they could bring that Rome would act on. Blasphemy would not do; Rome did not care about Jewish theology. A claim to be a king would. Pilate did not need a doctrine. He needed a word that meant rebellion.</p>
 
-  <p class="rv">Down in the courtyard, John’s Gospel says, the servants had lit a charcoal fire because the night was cold, and Peter stood by it warming his hands. A servant girl looked at him twice. The Greek word for that kind of fire appears exactly twice in the entire New Testament. The second time is on a beach, and we will come to it. For now it is enough to say that a fisherman from Capernaum, asked three times whether he knew the prisoner, said three times that he did not, and that somewhere in the city, in the last dark before dawn, a rooster crowed.</p>
+  <p class="rv">Down in the courtyard, John’s Gospel says, the servants had lit a charcoal fire because the night was cold, and Peter stood by it warming his hands. A servant girl looked at him twice. The Greek word for that kind of fire appears exactly twice in the entire New Testament. The second time is on a beach, near the end of the story. A fisherman from Capernaum, asked three times whether he knew the prisoner, said three times that he did not, and that somewhere in the city, in the last dark before dawn, a rooster crowed.</p>
 
   <blockquote class="pull rv">
     <p>What happened in the garden was reported by the people who slept through it.</p>
@@ -733,7 +733,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="jerusalem" data-marks="praetorium,golgotha" data-year="30" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Friday · the third to the ninth hour</span><span class="stmap-found">The governor’s residence · Golgotha, outside the wall</span></figcaption>
+    <figcaption><span class="stmap-when">Friday, c. 30 CE · nine in the morning to three in the afternoon</span><p class="stmap-look">Herod’s palace, where the governor held court, is the walled block at the left, below the three towers Hippicus, Phasael, and Mariamne. Golgotha lay just outside the ancient wall to the north-west, in the angle between the Gate Gennath and the Corner Gate: inside the modern walls drawn in red, outside the ancient walls drawn in black. The dotted line is the short walk from the judgement to the cross.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -765,7 +765,7 @@ blockquote{margin:0}
     <cite>Mark 15:34</cite>
   </blockquote>
 
-  <p class="rv">Then he died. Before sundown, when the Sabbath began and all work had to stop, the body was taken down, wrapped in cloth, and carried a short distance to a new tomb cut into the quarry wall. A stone was rolled across the entrance. The women who had followed him from Galilee, Mark says, watched where he was laid. Remember that. Everything that happens on Sunday depends on their knowing which door.</p>
+  <p class="rv">Then he died. Before sundown, when the Sabbath began and all work had to stop, the body was taken down, wrapped in cloth, and carried a short distance to a new tomb cut into the quarry wall. A stone was rolled across the entrance. The women who had followed him from Galilee, Mark says, watched where he was laid. Everything that happens on Sunday depends on their knowing which door.</p>
 </section>
 <!-- ═══════════════════════════ VIII · THE EMPTY SPACE ═══════════════════════════ -->
 <section class="station" id="s8" data-hour="night">
@@ -776,11 +776,11 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="madaba" data-marks="sepulchre" data-year="30" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Saturday · the Sabbath</span><span class="stmap-found">On the oldest map of Jerusalem, made five centuries later, the church over the tomb stands at the centre of the city</span></figcaption>
+    <figcaption><span class="stmap-when">Saturday, c. 30 CE · the mosaic c. 560 CE</span><p class="stmap-look">This is the oldest surviving map of Jerusalem, a floor mosaic laid five centuries after the events, and it shows the city from the west with the colonnaded main street running left to right through the middle. The oval plaza with a column at the far left is the Damascus Gate. The Church of the Holy Sepulchre is the large domed building just below the centre of the street, drawn upside down so that its doors face the viewer. The dot marks it. The timeline marker sits on the Saturday, not on the mosaic.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
-  <p class="lede rv">Saturday is the day about which the sources say nothing. The city kept the Sabbath. The disciples were in hiding. The women waited for daylight, because the work of mourning could not begin until the Sabbath ended. History, too, has nothing for Saturday except a door with a stone across it. I want to look carefully at that door before anyone opens it.</p>
+  <p class="lede rv">Saturday is the day about which the sources say nothing. The city kept the Sabbath. The disciples were in hiding. The women waited for daylight, because the work of mourning could not begin until the Sabbath ended. History, too, has nothing for Saturday except a door with a stone across it. The door itself deserves a careful look before anyone opens it.</p>
 
   <figure class="spec spec--full rv">
     <img src="assets/img/rolling_stone.jpg" srcset="assets/img/rolling_stone-800.jpg 800w, assets/img/rolling_stone.jpg 1500w" sizes="(max-width: 760px) 100vw, 720px" alt="The low rock-cut entrance of a first-century Jerusalem tomb with a large disc-shaped rolling stone set in a channel beside it" width="1500" height="970" loading="lazy" decoding="async">
@@ -822,7 +822,7 @@ blockquote{margin:0}
     <p>You may have read that a marble slab in Paris, the “Nazareth Inscription,” proves that Rome responded to the empty tomb. It carries an imperial decree threatening death for anyone who removes a body from a grave, and it was bought in 1878 by a collector who noted only that it had been “sent from Nazareth.” The unusually harsh penalty invited the idea that the emperor was reacting to reports from Galilee. In 2020, a team of researchers analysed the chemistry of the marble and traced it to a quarry on the Greek island of Kos, where the tomb of a local ruler had been notoriously vandalised a generation before Jesus. The decree is almost certainly about Kos. It stays off the shelf. An inventory that cannot leave things out is not an inventory. It is a shrine.</p>
   </aside>
 
-  <p class="rv">What the door itself cannot tell us, the opponents can. The oldest surviving argument against the resurrection is preserved in Matthew’s Gospel, which quotes it in order to answer it: “His disciples came by night and stole him away.” A century later, a Christian writer named Justin reports that Jewish leaders were still spreading the same explanation. Around the year 200, another writer, Tertullian, mocks a version in which a gardener moved the body to protect his lettuces from the crowds. Notice what all these explanations have in common. They all explain an empty tomb. Not one ancient opponent, in any text that survives, says the obvious thing: the body is still there, go and look. In a city that has given us the bones of Caiaphas and the heel of Yehohanan, that silence carries weight.</p>
+  <p class="rv">What the door itself cannot tell us, the opponents can. The oldest surviving argument against the resurrection is preserved in Matthew’s Gospel, which quotes it in order to answer it: “His disciples came by night and stole him away.” A century later, a Christian writer named Justin reports that Jewish leaders were still spreading the same explanation. Around the year 200, another writer, Tertullian, mocks a version in which a gardener moved the body to protect his lettuces from the crowds. All these explanations have one thing in common. They explain an empty tomb. Not one ancient opponent, in any text that survives, says the obvious thing: the body is still there, go and look. In a city that has given us the bones of Caiaphas and the heel of Yehohanan, that silence carries weight.</p>
 
   <p class="rv">It also has a limit, and here I have reached it. History can walk you to the door of the tomb. It can date the mortar, measure the stone, and tell you who was standing there and what they said afterward. It cannot go inside. Neither could the women. They came to a door in the half-dark and found it open, and everything that follows, for them and for anyone since, begins not with an argument but with a decision about what to do next.</p>
 
@@ -839,7 +839,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="levant" data-marks="jerusalem,damascus" data-year="34" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Sunday, c. 30 CE · Damascus, c. 33–36 CE</span><span class="stmap-found">The garden at dawn · the road to Damascus</span></figcaption>
+    <figcaption><span class="stmap-when">c. 30–36 CE · Sunday, then the road to Damascus</span><p class="stmap-look">Jerusalem is near the bottom of the map. Damascus is in the top right corner, beyond Mount Hermon, about 135 miles away by the road north through Galilee that Paul was travelling a few years later. The timeline marker sits between the two dates, the Sunday and the road.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -859,7 +859,7 @@ blockquote{margin:0}
     </figcaption>
   </figure>
 
-  <p class="rv">Now turn from the Gospels to the oldest Christian document of all. Around the year 55, Paul reminded the Corinthians of what he had been taught when he himself became a Christian, some twenty years earlier. He quotes a short, formal statement of belief, a creed, with the balanced phrases of something learned by heart, and says he received it and passed it on unchanged. Scholars who agree on almost nothing else agree that this is the earliest Christian text we have, and that it was already fixed when Paul learned it in the mid-thirties, within a few years of the crucifixion, from people who had been in Jerusalem that week.</p>
+  <p class="rv">The oldest Christian document of all is not a Gospel. Around the year 55, Paul reminded the Corinthians of what he had been taught when he himself became a Christian, some twenty years earlier. He quotes a short, formal statement of belief, a creed, with the balanced phrases of something learned by heart, and says he received it and passed it on unchanged. Scholars who agree on almost nothing else agree that this is the earliest Christian text we have, and that it was already fixed when Paul learned it in the mid-thirties, within a few years of the crucifixion, from people who had been in Jerusalem that week.</p>
 
   <blockquote class="verse rv">
     <p>For I delivered to you as of first importance what I also received: that Christ died for our sins in accordance with the Scriptures, that he was buried, that he was raised on the third day in accordance with the Scriptures, and that he appeared to Cephas, then to the twelve. Then he appeared to more than five hundred brothers at one time, most of whom are still alive, though some have fallen asleep. Then he appeared to James, then to all the apostles. Last of all, as to one untimely born, he appeared also to me.</p>
@@ -902,7 +902,7 @@ blockquote{margin:0}
   </header>
   <figure class="stmap rv" data-view="levant" data-marks="emmaus,jerusalem,galilee-shore" data-year="30" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">Sunday · then some days later</span><span class="stmap-found">Seven miles out, seven miles back · then north to the lake</span></figcaption>
+    <figcaption><span class="stmap-when">Sunday, c. 30 CE · and some days after</span><p class="stmap-look">Emmaus lies a few miles west of Jerusalem near the bottom of the map, on the road down to the coastal plain. From there the two disciples turned back east to the city, and from the city the story turns north, up the whole length of the map, to the shore of the lake where it began. The dotted line follows that turn.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -938,11 +938,11 @@ blockquote{margin:0}
     <cite>Luke 24:32–33</cite>
   </blockquote>
 
-  <p class="rv">Seven miles back, in the dark, on the road they had walked that afternoon in the other direction. That is the shape of the story, and once you have seen it, you see it throughout the record. It is the shape of the very first thing Jesus is reported to have said in public. Mark gives it: “The kingdom of God is at hand; repent.” The Greek word is <i>metanoeite</i>, and English has turned it into a word about feeling sorry. The Hebrew idea underneath it, the word every prophet before him had used, is <i>shuv</i>: turn around, come back. “Return to me, and I will return to you,” the prophet Malachi had written. The first thing Jesus asked of anyone was not to move forward. It was to turn.</p>
+  <p class="rv">Seven miles back, in the dark, on the road they had walked that afternoon in the other direction. That is the shape of the story, and the same shape runs through the whole record. It is the shape of the very first thing Jesus is reported to have said in public. Mark gives it: “The kingdom of God is at hand; repent.” The Greek word is <i>metanoeite</i>, and English has turned it into a word about feeling sorry. The Hebrew idea underneath it, the word every prophet before him had used, is <i>shuv</i>: turn around, come back. “Return to me, and I will return to you,” the prophet Malachi had written. The first thing Jesus asked of anyone was not to move forward. It was to turn.</p>
 
   <span class="loc" data-place="beatitudes" data-hour="morning" data-when="Read again, in the morning" data-year="29" data-found="Codex Sinaiticus, 4th century · British Library"></span>
 
-  <p class="rv">Now go back to the hillside, as I said we would, and read the Beatitudes again.</p>
+  <p class="rv">Here are the Beatitudes again, as they look from the far side of the week.</p>
 
   <div class="beatitudes beatitudes--return rv" id="beatitudes-return">
     <p class="bt"><span class="bt-a">Blessed are the poor in spirit,</span> <span class="bt-b">for theirs is the kingdom of heaven.</span></p>
@@ -958,7 +958,7 @@ blockquote{margin:0}
 
   <p class="rv">Each sentence has two halves, and the halves do different jobs. The first half names people: the poor, the grieving, the meek, those who hunger for justice, the merciful, the clean-hearted, the peacemakers, the persecuted. It points in a direction, toward the people at the bottom, and it is the direction most of the modern world learned from him without remembering where it learned it. The hospital and the orphanage, the belief that the weak have a claim on the strong and that the stranger is owed something, the discomfort you feel when someone mocks the poor: all of that was taught on this hillside. People who have not been inside a church in thirty years still feel that discomfort. It is right that they do. It is his.</p>
 
-  <p class="rv">But each sentence has a second half, and a direction is not the same thing as a destination. Read the second halves on their own and notice what they are. “Theirs is the kingdom”: a people in exile given their country back. “They shall be comforted”: the prophet Isaiah’s words to a nation coming home from Babylon. “They shall inherit the earth”: a line from the Psalms about the humble receiving the land that was promised to them and lost. “Satisfied”: the hunger of the wilderness ended. “See God”: face to face, as in the garden at the beginning of the Bible, before that was lost too. “Called sons of God”: the name a father uses for a child who has come back through the door. Every one of the promises is a homecoming. Not one of them is a frontier. Jesus never told anyone to advance. He told them the kingdom had come close, and to turn around.</p>
+  <p class="rv">But each sentence has a second half, and a direction is not the same thing as a destination. The second halves, on their own, are something different. “Theirs is the kingdom”: a people in exile given their country back. “They shall be comforted”: the prophet Isaiah’s words to a nation coming home from Babylon. “They shall inherit the earth”: a line from the Psalms about the humble receiving the land that was promised to them and lost. “Satisfied”: the hunger of the wilderness ended. “See God”: face to face, as in the garden at the beginning of the Bible, before that was lost too. “Called sons of God”: the name a father uses for a child who has come back through the door. Every one of the promises is a homecoming. Not one of them is a frontier. Jesus never told anyone to advance. He told them the kingdom had come close, and to turn around.</p>
 
   <p class="rv">There is a way of reading these nine sentences that hears only the first halves and builds a programme for improving the world on them. It is not wrong. It is half. There is a way of reading them that hears only the second halves and builds a private comfort on them, and that is half too. The sentences are whole only when the direction and the homecoming are held together, in one hand, and the one hand that ever held them together was the hand that broke the bread at Emmaus. A drive to make things better that has forgotten where home is becomes mere motion. A longing for home that has forgotten the poor becomes mere nostalgia. He offered neither one alone. He offered the road out of the city and the road back, walked on the same evening, by the same two people, changed.</p>
 
@@ -986,7 +986,7 @@ blockquote{margin:0}
     <cite>Luke 15:20</cite>
   </blockquote>
 
-  <p class="rv">The father runs. Apply the first test to that detail. In the villages of Galilee, a man of standing did not run. It was undignified; it meant hitching up your robe like a child or a servant. The people on the hillside would have laughed at the picture, and then stopped laughing. Nobody inventing a God would make him run. And the story ends, like Mark’s Gospel, with a door: the elder son standing outside the party, his father come out to plead with him, and no verse to tell us whether he went in. Jesus did not finish his stories. He left them open at the exact point where the listener had to decide.</p>
+  <p class="rv">The father runs. The first test applies to that detail too. In the villages of Galilee, a man of standing did not run. It was undignified; it meant hitching up your robe like a child or a servant. The people on the hillside would have laughed at the picture, and then stopped laughing. Nobody inventing a God would make him run. And the story ends, like Mark’s Gospel, with a door: the elder son standing outside the party, his father come out to plead with him, and no verse to tell us whether he went in. Jesus did not finish his stories. He left them open at the exact point where the listener had to decide.</p>
 
   <span class="loc" data-place="galilee-shore" data-hour="morning" data-when="Some days later · the north shore, at daybreak" data-year="30" data-found="Mark 16:7 · John 21"></span>
 
@@ -1012,9 +1012,9 @@ blockquote{margin:0}
     <p class="st-eyebrow">XI · The inventory, totalled</p>
     <h2 class="st-title">What We Can Say for Certain</h2>
   </header>
-  <figure class="stmap rv" data-view="wide" data-marks="rome,bithynia,egypt,jerusalem" data-year="116" aria-label="Map and date for this station">
+  <figure class="stmap rv" data-view="wide" data-marks="rome,bithynia,egypt,jerusalem" data-year="116" data-route="0" aria-label="Map and date for this station">
     <div class="stmap-canvas"></div>
-    <figcaption><span class="stmap-when">c. 30 – 200 CE</span><span class="stmap-found">Where the record was kept: Rome, Bithynia, Egypt, Jerusalem</span></figcaption>
+    <figcaption><span class="stmap-when">c. 30 CE to c. 200 CE · where the record was kept</span><p class="stmap-look">Rome is at the left, where Tacitus wrote and where the graffito was scratched. Bithynia, where Pliny governed, is on the northern coast of Asia Minor, near the middle of the map at the top. Egypt is at the bottom, where the papyri were found. Jerusalem is at the right, where it happened. The timeline marker sits at Tacitus.</p></figcaption>
     <div class="stmap-time" aria-hidden="true"></div>
   </figure>
 
@@ -1034,7 +1034,7 @@ blockquote{margin:0}
     <li class="beyond"><div class="ev-head"><span class="ev-claim">What emptied the tomb</span><span class="badge b0">Beyond the method</span></div><p class="ev-why">Not disputed. Not that kind of question. The historian walks you to the door and stops, and says so.</p></li>
   </ol>
 
-  <p class="rv">Notice what this consensus is made of. Details that embarrassed the people who preserved them. Facts reported by sources that had never read each other. Admissions from witnesses who wished the whole thing would go away. Tacitus, with access to the records of the Roman Senate, confirms the execution under Pilate. Josephus, who had no patience for messiahs, mentions the man, his brother, and the followers who were still around in the nineties. The Talmud, hostile throughout, remembers a Yeshua hanged on the eve of Passover for sorcery and leading Israel astray. Pliny reports the hymns before dawn. A Roman schoolboy draws the donkey on the cross. Even the enemies agreed on the skeleton of the story. The argument was never about whether these things happened. It was about what they meant.</p>
+  <p class="rv">This consensus is made of particular materials. Details that embarrassed the people who preserved them. Facts reported by sources that had never read each other. Admissions from witnesses who wished the whole thing would go away. Tacitus, with access to the records of the Roman Senate, confirms the execution under Pilate. Josephus, who had no patience for messiahs, mentions the man, his brother, and the followers who were still around in the nineties. The Talmud, hostile throughout, remembers a Yeshua hanged on the eve of Passover for sorcery and leading Israel astray. Pliny reports the hymns before dawn. A Roman schoolboy draws the donkey on the cross. Even the enemies agreed on the skeleton of the story. The argument was never about whether these things happened. It was about what they meant.</p>
 
   <p class="rv">So here is history’s verdict, and it is not a shrug. A Jewish teacher from a village no one had heard of lived, taught with an authority that alarmed his own family and enraged his enemies, died on a Roman cross as a public joke, and started something that has not stopped. It is customary to end an inquiry like this by saying that whatever happened in the tomb, call it resurrection or call it the power of an idea, either way we are left with a mystery. I decline the custom. There is no “either way” at a door. The women did not stand outside it weighing hypotheses. They went in, and came out, and ran.</p>
 
@@ -1057,7 +1057,7 @@ blockquote{margin:0}
 
   <p class="rv">That is all I will say about that. It is the kind of thing a person says once, at the end of a book, and then goes outside.</p>
 
-  <p class="rv">Read the nine sentences again. Then read them once more. Then, if you can, get up before the light some morning, go somewhere quiet, leave your phone in your pocket, and watch what the women watched. Every road in this story went out from the city in the dark and came back the same night, walked by people who had hoped, in the past tense, and then simply hoped. The stones are where they always were. So is the road back.</p>
+  <p class="rv">Every road in this story went out from the city in the dark and came back the same night, walked by people who had hoped, in the past tense, and then simply hoped. The stones are where they always were. So is the road back.</p>
 
   <p class="rv final-line">The sun had risen.</p>
 </section>
@@ -1215,7 +1215,7 @@ const STATIONS = {
   'levant':         {name:'The whole record', short:''}
 };
 /* Archival base maps. Marker positions are percentages of the cropped image, read off a grid. */
-const MAPS = {"wide":{"file":"rome.jpg","small":"rome-800.jpg","w":892,"h":491,"alt":"An 1884 atlas map of the Roman Empire in the first century, the empire coloured yellow around the Mediterranean","credit":"Robert H. Labberton, New Historical Atlas, 1884 · public domain","page":"https://commons.wikimedia.org/wiki/File:Roman_empire_1st_cen_1884.jpg","pts":{"rome":[21.5,41,"r"],"jerusalem":[61.5,73.5,"r"],"egypt":[49.3,85,"b"],"bithynia":[50.7,42,"a"]}},"levant":{"file":"levant.jpg","small":"levant-800.jpg","w":1400,"h":1973,"alt":"Kent and Madsen’s 1912 map of Palestine in the time of Jesus, with Galilee, Samaria, Judea, and the Decapolis in colour","credit":"Kent & Madsen, ‘Palestine in the Time of Jesus’, 1912 · Library of Congress","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"caesarea":[13.5,53.5,"r"],"jerusalem-tombs":[34.2,89.8,"b"],"jerusalem":[34,89,"r"],"emmaus":[28.3,88.7,"l"],"jericho-road":[46,84.8,"r"],"jordan":[48.5,85.5,"r"],"damascus":[91.5,4.5,"l"],"nazareth":[31,46.5,"l"],"capernaum":[54.5,35.3,"r"],"magdala":[49.3,38.2,"l"],"beatitudes":[53,36.5,"a"],"galilee-shore":[54,36,"r"]}},"galilee":{"file":"galilee.jpg","small":"galilee-800.jpg","w":1400,"h":1183,"alt":"Detail of Kent and Madsen’s 1912 map showing Galilee and the Sea of Galilee, with Nazareth, Magdala, Tiberias, and Capernaum","credit":"Detail from Kent & Madsen, ‘Palestine in the Time of Jesus’, 1912 · Library of Congress","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"nazareth":[28.7,71.2,"b"],"capernaum":[67.5,37,"b"],"magdala":[56.8,48.7,"l"],"beatitudes":[63.2,42.2,"l"],"galilee-shore":[65.5,41.5,"r"]}},"jerusalem":{"file":"kent_jerusalem.jpg","small":"kent_jerusalem-800.jpg","w":1400,"h":1578,"alt":"A 1912 plan of Jerusalem in the Roman period: the Temple, the Antonia fortress, the Upper City, Herod’s palace, and the valleys, with the modern walls in red","credit":"‘Jerusalem during the Roman Period’, Kent & Madsen, 1912 · ancient walls in black, modern walls in red","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"temple":[72,42,"b"],"praetorium":[27,58,"b"],"upper-room":[29,77,"r"],"caiaphas-house":[36,70,"r"],"golgotha":[33.5,42,"r"],"tomb":[31,40,"l"],"gethsemane":[93,41,"l"]}},"madaba":{"file":"madaba.jpg","small":"madaba-800.jpg","w":1600,"h":902,"alt":"The Jerusalem panel of the Madaba mosaic map, a sixth-century floor mosaic showing the walled city with its colonnaded main street and the domed Church of the Holy Sepulchre","credit":"The Madaba mosaic map, c. 560 CE · Church of St George, Madaba, Jordan · photograph Carole Raddato, CC BY-SA 2.0","page":"https://commons.wikimedia.org/wiki/File:The_Madaba_Map_(detail_of_Jerusalem),_part_of_a_floor_mosaic_in_the_early_Byzantine_church_of_Saint_George_depicting_the_Holy_Land_in_the_6th_century_AD,_Madaba,_Jordan_(34446452082).jpg","pts":{"sepulchre":[50.5,62,"b"],"tomb":[50.5,62,"b"]}}};
+const MAPS = {"wide":{"file":"rome.jpg","small":"rome-800.jpg","w":892,"h":491,"alt":"An 1884 atlas map of the Roman Empire in the first century, the empire coloured yellow around the Mediterranean","credit":"Robert H. Labberton, New Historical Atlas, 1884 · public domain","page":"https://commons.wikimedia.org/wiki/File:Roman_empire_1st_cen_1884.jpg","pts":{"rome":[21.5,41,"r"],"jerusalem":[61.5,73.5,"r"],"egypt":[49.3,85,"b"],"bithynia":[50.7,42,"a"]}},"levant":{"file":"levant.jpg","small":"levant-800.jpg","w":1400,"h":1973,"alt":"Kent and Madsen’s 1912 map of Palestine in the time of Jesus, with Galilee, Samaria, Judea, and the Decapolis in colour","credit":"Kent & Madsen, ‘Palestine in the Time of Jesus’, 1912 · Library of Congress","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"caesarea":[13.5,53.5,"r"],"jerusalem-tombs":[34.2,89.8,"b"],"jerusalem":[34,89,"r"],"emmaus":[28.3,88.7,"l"],"jericho-road":[46,84.8,"r"],"jordan":[48.5,85.5,"r"],"damascus":[91.5,4.5,"l"],"nazareth":[31,46.5,"l"],"capernaum":[54.5,35.3,"r"],"magdala":[49.3,38.2,"l"],"beatitudes":[53,36.5,"a"],"galilee-shore":[54,36,"r"]}},"galilee":{"file":"galilee.jpg","small":"galilee-800.jpg","w":1400,"h":1183,"alt":"Detail of Kent and Madsen’s 1912 map showing Galilee and the Sea of Galilee, with Nazareth, Magdala, Tiberias, and Capernaum","credit":"Detail from Kent & Madsen, ‘Palestine in the Time of Jesus’, 1912 · Library of Congress","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"nazareth":[28.7,71.2,"b"],"capernaum":[67.5,37,"b"],"magdala":[56.8,48.7,"l"],"beatitudes":[63.2,42.2,"l"],"galilee-shore":[65.5,41.5,"r"]}},"jerusalem":{"file":"kent_jerusalem.jpg","small":"kent_jerusalem-800.jpg","w":1400,"h":1578,"alt":"A 1912 plan of Jerusalem in the Roman period: the Temple, the Antonia fortress, the Upper City, Herod’s palace, and the valleys, with the modern walls in red","credit":"‘Jerusalem during the Roman Period’, Kent & Madsen, 1912 · ancient walls in black, modern walls in red","page":"https://commons.wikimedia.org/wiki/File:Palestine_in_the_time_of_Jesus,_4_B.C._-_30_A.D._-_(including_the_period_of_Herod,_40_-_4_B.C.)_LOC_2009579463.jpg","pts":{"temple":[72,42,"b"],"praetorium":[27,58,"b"],"upper-room":[29,77,"r"],"caiaphas-house":[36,70,"r"],"golgotha":[28.5,38.5,"r"],"tomb":[27,37,"l"],"gethsemane":[96.5,40,"l"]}},"madaba":{"file":"madaba.jpg","small":"madaba-800.jpg","w":1600,"h":902,"alt":"The Jerusalem panel of the Madaba mosaic map, a sixth-century floor mosaic showing the walled city with its colonnaded main street and the domed Church of the Holy Sepulchre","credit":"The Madaba mosaic map, c. 560 CE · Church of St George, Madaba, Jordan · photograph Carole Raddato, CC BY-SA 2.0","page":"https://commons.wikimedia.org/wiki/File:The_Madaba_Map_(detail_of_Jerusalem),_part_of_a_floor_mosaic_in_the_early_Byzantine_church_of_Saint_George_depicting_the_Holy_Land_in_the_6th_century_AD,_Madaba,_Jordan_(34446452082).jpg","pts":{"sepulchre":[50.5,62,"b"],"tomb":[50.5,62,"b"]}}};
 function drawMap(card){
   const view=card.dataset.view, M=MAPS[view]; if(!M) return;
   const marks=card.dataset.marks.split(',').filter(k=>M.pts[k]);
@@ -1223,16 +1223,16 @@ function drawMap(card){
   const img=document.createElement('img'); img.src='assets/img/maps/'+M.file; img.alt=M.alt; img.loading='lazy'; img.decoding='async'; img.width=M.w; img.height=M.h;
   if(M.small) img.srcset='assets/img/maps/'+M.small+' 800w, assets/img/maps/'+M.file+' '+M.w+'w', img.sizes='(max-width: 760px) 100vw, 720px';
   host.appendChild(img);
-  if(marks.length>1){const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('class','mk-route'); s.setAttribute('viewBox','0 0 100 100'); s.setAttribute('preserveAspectRatio','none');
+  if(marks.length>1&&card.dataset.route!=='0'){const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('class','mk-route'); s.setAttribute('viewBox','0 0 100 100'); s.setAttribute('preserveAspectRatio','none');
     const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',marks.map((k,i)=>(i?'L':'M')+M.pts[k][0]+' '+M.pts[k][1]).join(' ')); p.setAttribute('vector-effect','non-scaling-stroke'); s.appendChild(p); host.appendChild(s);}
-  marks.forEach(k=>{const [x,y,side]=M.pts[k]; const m=document.createElement('span'); m.className='mk mk--'+(side||'r'); m.style.left=x+'%'; m.style.top=y+'%'; m.innerHTML='<i></i><b>'+STATIONS[k].short+'</b>'; host.appendChild(m);});
-  const cr=document.createElement('span'); cr.className='stmap-credit'; cr.textContent=M.credit; card.querySelector('figcaption').appendChild(cr);
+  marks.forEach(k=>{const [x,y]=M.pts[k]; const m=document.createElement('span'); m.className='mk'; m.style.left=x+'%'; m.style.top=y+'%'; m.setAttribute('title',STATIONS[k].name); m.innerHTML='<i></i>'; host.appendChild(m);});
+  const cr=document.createElement('span'); cr.className='stmap-credit'; cr.textContent=M.credit; card.appendChild(cr);
 }
 const TICKS=[[-4,'born'],[30,'the cross'],[70,'Temple falls'],[116,'Tacitus'],[200,'graffito']];
-function drawTime(host,year){const tr=document.createElement('div');tr.className='tl-track';
+function drawTime(host,year,label){const tr=document.createElement('div');tr.className='tl-track';
   TICKS.forEach(([y,l])=>{const d=document.createElement('div');d.className='tl-tick';d.style.left=((y+10)/220*100)+'%';d.innerHTML='<i></i><span>'+l+'</span>';tr.appendChild(d);});
-  const m=document.createElement('div');m.className='tl-marker';m.style.left=((Math.max(-10,Math.min(210,year))+10)/220*100)+'%';tr.appendChild(m);host.appendChild(tr);}
-document.querySelectorAll('.stmap').forEach(card=>{ drawMap(card); drawTime(card.querySelector('.stmap-time'),parseFloat(card.dataset.year)); });
+  const pct=(Math.max(-10,Math.min(210,year))+10)/220*100; const m=document.createElement('div');m.className='tl-marker';m.style.left=pct+'%';tr.appendChild(m); const ml=document.createElement('div');ml.className='tl-now';ml.style.left=pct+'%';ml.textContent=label||'';if(pct>78)ml.classList.add('tl-now--l');if(pct<22)ml.classList.add('tl-now--r');tr.appendChild(ml);host.appendChild(tr);}
+document.querySelectorAll('.stmap').forEach(card=>{ drawMap(card); const w=card.querySelector('.stmap-when'); drawTime(card.querySelector('.stmap-time'),parseFloat(card.dataset.year),(w?w.textContent.split('·')[0].trim():'')); });
 
 /* ── the strip and the hour ── */
 const root=document.documentElement, sNum=document.getElementById('strip-num'), sPlace=document.getElementById('strip-place'), sWhen=document.getElementById('strip-when');
